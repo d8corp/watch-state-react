@@ -1,0 +1,35 @@
+{
+  "name": "@watch-state/react",
+  "version": "1.0.0",
+  "description": "State manager of React",
+  "main": "index.js",
+  "module": "index.es6.js",
+  "jsnext:main": "index.es6.js",
+  "types": "index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/d8corp/watch-state-react.git"
+  },
+  "keywords": [
+    "watch",
+    "state",
+    "stateful",
+    "reaction",
+    "reactions",
+    "react",
+    "reactive",
+    "observe",
+    "observable",
+    "front-end"
+  ],
+  "author": "Mikhail Lysikov <d8corp@mail.ru>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/d8corp/watch-state-react/issues"
+  },
+  "homepage": "https://github.com/d8corp/watch-state-react",
+  "dependencies": {
+    "react": ">=16.8",
+    "watch-state": ">=1.0.2"
+  }
+}

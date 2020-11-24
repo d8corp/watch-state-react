@@ -1,4 +1,4 @@
-import {Watch, Cache, stateValues} from 'watch-state'
+import {Watch, Cache, Mixer, stateValues} from 'watch-state'
 import {useEffect, useState} from 'react'
 
 const WATCHER = Symbol('watcher')
@@ -14,7 +14,7 @@ export default function watch (target) {
       if (values) {
         for (const key in values) {
           const value = values[key]
-          if (value instanceof Cache) {
+          if (value instanceof Cache || value instanceof Mixer) {
             value.destructor()
           }
         }

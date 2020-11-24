@@ -50,6 +50,6 @@
   },
   "dependencies": {
     "react": ">=16.8",
-    "watch-state": ">=1.0.2"
+    "watch-state": ">=1.0.4"
   }
 }

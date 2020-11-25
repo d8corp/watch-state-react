@@ -18,6 +18,7 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "jsx": "react",
     "declaration": true
   },
   "include": [

@@ -10,6 +10,11 @@ const def = {
   ]
 }
 
+const exclude = [
+  'src/**/*.test.ts',
+  'src/**/*.test.tsx',
+]
+
 export default [{
   ...def,
   output: {
@@ -25,9 +30,7 @@ export default [{
         compilerOptions: {
           module: 'esnext'
         },
-        exclude: [
-          'src/**/*.test.ts'
-        ]
+        exclude
       }
     })
   ]
@@ -47,9 +50,7 @@ export default [{
           target: 'es6',
           module: 'esnext'
         },
-        exclude: [
-          'src/**/*.test.ts'
-        ]
+        exclude
       }
     })
   ]

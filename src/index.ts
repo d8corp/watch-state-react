@@ -23,13 +23,18 @@ export default function watch (target) {
     }
     target.prototype.render = function render () {
       let result, args = arguments
-      this[WATCHER] = new Watch(update => {
-        if (update) {
-          this.forceUpdate()
-        } else {
-          result = originalRender.apply(this, args)
-        }
-      })
+      if (this[WATCHER]?.updating) {
+        result = originalRender.apply(this, args)
+      } else {
+        this[WATCHER]?.destructor()
+        this[WATCHER] = new Watch(update => {
+          if (update) {
+            this.forceUpdate()
+          } else {
+            result = originalRender.apply(this, args)
+          }
+        })
+      }
       return result
     }
     return target

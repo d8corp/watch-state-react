@@ -1,6 +1,6 @@
 {
   "name": "@watch-state/react",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "State manager of React",
   "main": "index.js",
   "module": "index.es6.js",

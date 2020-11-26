@@ -1,7 +1,8 @@
-import {Watch, Cache, Mixer, stateValues} from 'watch-state'
+import {Watch, Cache, Mixer, stateValues, unwatch} from 'watch-state'
 import {useEffect, useState} from 'react'
 
 const WATCHER = Symbol('watcher')
+const UPDATING = Symbol('watcher')
 
 export default function watch (target) {
   const originalRender = target.prototype?.render
@@ -23,16 +24,21 @@ export default function watch (target) {
     }
     target.prototype.render = function render () {
       let result, args = arguments
-      if (this[WATCHER]?.updating) {
+      if (this[UPDATING]) {
         result = originalRender.apply(this, args)
       } else {
         this[WATCHER]?.destructor()
-        this[WATCHER] = new Watch(update => {
-          if (update) {
-            this.forceUpdate()
-          } else {
-            result = originalRender.apply(this, args)
-          }
+        let watcher
+        unwatch(() => {
+          watcher = this[WATCHER] = new Watch(update => {
+            if (!update) {
+              result = originalRender.apply(this, args)
+            } else if (watcher === this[WATCHER]) {
+              this[UPDATING] = true
+              this.forceUpdate()
+              this[UPDATING] = false
+            }
+          })
         })
       }
       return result

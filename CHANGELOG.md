@@ -1,5 +1,7 @@
 # Changelog
 ## v1.0
+### v1.0.4 [![29.11.2020](https://img.shields.io/date/1606680398)](https://github.com/d8corp/watch-state-react/tree/v1.0.4)
+- added export of `WATCHER` and `UPDATING`
 ### v1.0.3 [![26.11.2020](https://img.shields.io/date/1606417785)](https://github.com/d8corp/watch-state-react/tree/v1.0.3)
 - fixed deep force update bug of class components
 ### v1.0.2 [![25.11.2020](https://img.shields.io/date/1606316715)](https://github.com/d8corp/watch-state-react/tree/v1.0.2)

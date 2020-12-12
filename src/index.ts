@@ -1,17 +1,18 @@
-import {Watch, Cache, Mixer, stateValues, unwatch} from 'watch-state'
+import {Watch, Cache, Mixer, getDecors, unwatch} from 'watch-state'
 import {useEffect, useState} from 'react'
 
 export const WATCHER = Symbol('watcher')
 export const UPDATING = Symbol('watcher')
 
-export default function watch (target) {
+function watch <T> (target: T): T
+function watch (target) {
   const originalRender = target.prototype?.render
   if (originalRender) {
     const originalComponentWillUnmount = target.prototype?.componentWillUnmount
     target.prototype.componentWillUnmount = function componentWillUnmount () {
       this[WATCHER].destructor()
       this[WATCHER] = undefined
-      const values = stateValues(this)
+      const values = getDecors(this)
       if (values) {
         for (const key in values) {
           const value = values[key]
@@ -65,4 +66,5 @@ export default function watch (target) {
   }
 }
 
+export default watch
 export * from 'watch-state'

@@ -1,13 +1,11 @@
 import ReactDom from 'react-dom'
 import React, {Component, ReactElement} from 'react'
 import { act } from 'react-dom/test-utils'
-import watch, {State, Cache} from '.'
+import watch, {Watch, State, Cache, state, cache, getDecor} from '.'
 
 function render (component: ReactElement): HTMLDivElement {
   const div = document.createElement('div')
-  act(() => {
-    ReactDom.render(component, div)
-  })
+  ReactDom.render(component, div)
   return div
 }
 
@@ -15,7 +13,7 @@ describe('react', () => {
   describe('function component', () => {
     test('simple', () => {
       const state = new State(0)
-      const Test = watch(() => state.value)
+      const Test = watch<Function>(() => state.value)
       const test = render(<Test />)
       expect(test.innerHTML).toBe('0')
 
@@ -46,15 +44,11 @@ describe('react', () => {
       const test = render(<Test />)
       expect(test.innerHTML).toBe('0')
 
-      act(() => {
-        state.value++
-      })
+      state.value++
 
       expect(test.innerHTML).toBe('1')
 
-      act(() => {
-        state.value++
-      })
+      state.value++
 
       expect(test.innerHTML).toBe('2')
     })
@@ -80,17 +74,44 @@ describe('react', () => {
 
       expect(test.innerHTML).toBe('')
 
-      act(() => {
-        list.value = ['test1']
-      })
+      list.value = ['test1']
 
       expect(test.innerHTML).toBe('test1')
 
-      act(() => {
-        list.value = []
-      })
+      list.value = []
 
       expect(test.innerHTML).toBe('')
+    })
+    test('todo', async () => {
+      class Core {
+        @state items = []
+        @cache get sortedItems () {
+          return [...this.items].sort()
+        }
+        addItem (item) {
+          this.items.push(item)
+          getDecor<'state', this>(this, 'items').update()
+        }
+      }
+
+      const core = new Core()
+
+      @watch
+      class Items extends Component {
+        render () {
+          return core.sortedItems.map(todo => (
+            <div key={todo}>{todo}</div>
+          ))
+        }
+      }
+
+      const test = render(<Items />)
+
+      expect(test.innerHTML).toBe('')
+
+      core.addItem('foo')
+
+      expect(test.innerHTML).toBe('<div>foo</div>')
     })
   })
 })

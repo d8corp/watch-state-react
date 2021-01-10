@@ -53,6 +53,6 @@
   },
   "dependencies": {
     "react": ">=16.8",
-    "watch-state": ">=1.1.0"
+    "watch-state": "<2"
   }
 }

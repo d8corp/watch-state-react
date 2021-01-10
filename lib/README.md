@@ -59,15 +59,16 @@ const AsideMenu = watch(() => core.showAsideMenu ? (
 Use `cache` when you wanna cache computed values.
 ```typescript jsx
 import React, {Component} from 'react'
-import watch, {state, cache} from 'watch-state'
+import watch, {getDecor, state, cache} from '@watch-state/react'
 
 class Core {
   @state items = []
   @cache get sortedItems () {
-    return this.items.sort()
+    return [...this.items].sort()
   }
   addItem (item) {
-    this.items = [...this.items, item]
+    this.items.push(item)
+    getDecor<'state', this>(this, 'items').update()
   }
 }
 
@@ -86,7 +87,7 @@ class Items extends Component {
 Use mixer on computed values related to props
 ```typescript jsx
 import React, {Component} from 'react'
-import watch, {State, mixer} from 'watch-state'
+import watch, {State, mixer} from '@watch-state/react'
 
 interface UserProps {
   id?: number
@@ -108,7 +109,7 @@ class User extends Component<UserProps> {
 Use `event` if you wanna change several states in one action.
 ```typescript jsx
 import React, {Component} from 'react'
-import watch, {state, event} from 'watch-state'
+import watch, {state, event} from '@watch-state/react'
 
 @watch
 class Test extends Component {

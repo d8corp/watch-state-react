@@ -1,6 +1,6 @@
 {
   "name": "@watch-state/react",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "State manager of React",
   "main": "index.js",
   "module": "index.es6.js",
@@ -29,7 +29,8 @@
   },
   "homepage": "https://github.com/d8corp/watch-state-react",
   "dependencies": {
+    "@watch-state/mixer": "^1.0.0",
     "react": ">=16.8",
-    "watch-state": "<2"
+    "watch-state": ">=2"
   }
 }

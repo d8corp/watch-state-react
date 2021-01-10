@@ -3,3 +3,4 @@ export declare const UPDATING: unique symbol;
 declare function watch<T>(target: T): T;
 export default watch;
 export * from 'watch-state';
+export * from '@watch-state/mixer';

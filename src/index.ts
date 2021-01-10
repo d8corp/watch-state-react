@@ -1,4 +1,5 @@
-import {Watch, Cache, Mixer, getDecors, unwatch} from 'watch-state'
+import {Watch, Cache, getDecors, unwatch} from 'watch-state'
+import {Mixer} from '@watch-state/mixer'
 import {useEffect, useState} from 'react'
 
 export const WATCHER = Symbol('watcher')
@@ -68,3 +69,4 @@ function watch (target) {
 
 export default watch
 export * from 'watch-state'
+export * from '@watch-state/mixer'

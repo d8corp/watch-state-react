@@ -59,7 +59,7 @@ const AsideMenu = watch(() => core.showAsideMenu ? (
 Use `cache` when you wanna cache computed values.
 ```typescript jsx
 import React, {Component} from 'react'
-import watch, {getDecor, state, cache} from '@watch-state/react'
+import watch, {getState, state, cache} from '@watch-state/react'
 
 class Core {
   @state items = []
@@ -68,7 +68,7 @@ class Core {
   }
   addItem (item) {
     this.items.push(item)
-    getDecor<'state', this>(this, 'items').update()
+    getState(this, 'items').update()
   }
 }
 

@@ -1,7 +1,7 @@
 import ReactDom from 'react-dom'
 import React, {Component, ReactElement} from 'react'
 import { act } from 'react-dom/test-utils'
-import watch, {Watch, State, Cache, state, cache, getDecor} from '.'
+import watch, {State, Cache, state, cache, getState} from '.'
 
 function render (component: ReactElement): HTMLDivElement {
   const div = document.createElement('div')
@@ -90,7 +90,7 @@ describe('react', () => {
         }
         addItem (item) {
           this.items.push(item)
-          getDecor<'state', this>(this, 'items').update()
+          getState(this, 'items').update()
         }
       }
 

@@ -1,6 +1,10 @@
 # Changelog
 ## v1.2
-### v1.2.0 [![10.01.2021](https://img.shields.io/date/1610305647)](https://github.com/d8corp/watch-state-react/tree/v1.1.1)
+### v1.2.1 [![10.01.2021](https://img.shields.io/date/1610804101)](https://github.com/d8corp/watch-state-react/tree/v1.2.1)
+- added tests
+- removed useless code
+- added types
+### v1.2.0 [![10.01.2021](https://img.shields.io/date/1610305647)](https://github.com/d8corp/watch-state-react/tree/v1.2.0)
 - updated `watch-state` to `2.0.0`
 ## v1.1
 ### v1.1.1 [![10.01.2021](https://img.shields.io/date/1610280370)](https://github.com/d8corp/watch-state-react/tree/v1.1.1)

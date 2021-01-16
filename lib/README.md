@@ -2,7 +2,8 @@
 [![NPM](https://img.shields.io/npm/v/@watch-state/react.svg)](https://github.com/d8corp/watch-state-react/blob/master/CHANGELOG.md)
 [![downloads](https://img.shields.io/npm/dm/@watch-state/react.svg)](https://www.npmjs.com/package/@watch-state/react)
 [![license](https://img.shields.io/npm/l/@watch-state/react)](https://github.com/d8corp/watch-state-react/blob/master/LICENSE)
-  
+[![tests](https://github.com/d8corp/watch-state-react/workflows/tests/badge.svg)](https://d8corp.github.io/watch-state-react/coverage/lcov-report/)
+
 State manager of React 16.8+
 ### Installation
 npm
@@ -59,7 +60,7 @@ const AsideMenu = watch(() => core.showAsideMenu ? (
 Use `cache` when you wanna cache computed values.
 ```typescript jsx
 import React, {Component} from 'react'
-import watch, {getDecor, state, cache} from '@watch-state/react'
+import watch, {getState, state, cache} from '@watch-state/react'
 
 class Core {
   @state items = []
@@ -68,7 +69,7 @@ class Core {
   }
   addItem (item) {
     this.items.push(item)
-    getDecor<'state', this>(this, 'items').update()
+    getState(this, 'items').update()
   }
 }
 
@@ -78,7 +79,7 @@ const core = new Core()
 class Items extends Component {
   render () {
     return core.sortedItems.map(todo => (
-      <div>{todo}</div>
+      <div key={todo}>{todo}</div>
     ))
   }
 }

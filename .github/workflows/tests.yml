@@ -1,12 +1,10 @@
-name: tests
+name: Check tests
 
-on:
-  push:
-    branches: [ main ]
+on: workflow_dispatch
 
 jobs:
-  tests:
-
+  run:
+    name: Check tests
     runs-on: ubuntu-latest
 
     strategy:

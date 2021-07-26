@@ -1,4 +1,9 @@
 # Changelog
+## v1.3
+### v1.3.0 [![26.07.2021](https://img.shields.io/date/1627317332)](https://github.com/d8corp/watch-state-react/tree/v1.3.0)
+- migration to [watch-state](https://www.npmjs.com/package/watch-state) `v3`
+- changed logic of `mixer` decorator.
+
 ## v1.2
 ### v1.2.1 [![10.01.2021](https://img.shields.io/date/1610804101)](https://github.com/d8corp/watch-state-react/tree/v1.2.1)
 - added tests

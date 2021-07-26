@@ -1,8 +1,12 @@
+import { State, Cache } from 'watch-state';
 import { FunctionComponent, Component } from 'react';
 export declare const WATCHER: unique symbol;
 export declare const UPDATING: unique symbol;
 declare type Target = FunctionComponent | Component['constructor'];
 declare function watch<T extends Target>(target: T): T;
+export declare function getState<T>(target: T, key: keyof T): State;
+export declare function getCache<T>(target: T, key: keyof T): Cache;
+export declare function mixer<T extends Component>(target: T, key: keyof T, desc?: PropertyDescriptor): PropertyDescriptor;
 export default watch;
 export * from 'watch-state';
-export * from '@watch-state/mixer';
+export * from '@watch-state/decorators';

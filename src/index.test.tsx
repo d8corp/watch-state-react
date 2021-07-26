@@ -1,7 +1,7 @@
 import ReactDom from 'react-dom'
 import React, {Component, ReactElement, useEffect, useState} from 'react'
 import {act} from 'react-dom/test-utils'
-import watch, {State, Cache, state, cache, getState, mixer, getCache, getMixer} from '.'
+import watch, {State, Cache, state, cache, getState, mixer, getCache} from '.'
 
 function render (component: ReactElement): HTMLDivElement {
   const div = document.createElement('div')
@@ -181,7 +181,7 @@ describe('react', () => {
           return state.value + ', World'
         }
         componentDidMount () {
-          getCache(this, 'text').watcher.onDestructor(() => done = true)
+          getCache(this, 'text').onDestroy(() => done = true)
         }
 
         render() {
@@ -217,9 +217,6 @@ describe('react', () => {
         @mixer get text () {
           return state.value + this.props.value
         }
-        componentDidMount () {
-          getMixer(this, 'text').watcher.onDestructor(() => done = true)
-        }
 
         render() {
           return this.text
@@ -243,7 +240,6 @@ describe('react', () => {
       show.value = false
 
       expect(test.innerHTML).toBe('')
-      expect(done).toBe(true)
     })
     test('with state', async () => {
       @watch

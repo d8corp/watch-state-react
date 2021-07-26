@@ -1,5 +1,5 @@
-import {Watch, Cache, getDecors, unwatch} from 'watch-state'
-import {Mixer} from '@watch-state/mixer'
+import {State, Watch, Cache} from 'watch-state'
+import {getDecors} from '@watch-state/decorators'
 import {useEffect, useState, FunctionComponent, Component} from 'react'
 
 export const WATCHER = Symbol('watcher')
@@ -12,14 +12,14 @@ function watch <T extends Target> (target: T): T {
   if (originalRender) {
     const originalComponentWillUnmount = target.prototype.componentWillUnmount
     target.prototype.componentWillUnmount = function componentWillUnmount () {
-      this[WATCHER].destructor()
+      this[WATCHER].destroy()
       this[WATCHER] = undefined
       const values = getDecors(this)
       if (values) {
         for (const key in values) {
           const value = values[key]
-          if (value instanceof Cache || value instanceof Mixer) {
-            value.destructor()
+          if (value instanceof Cache) {
+            value.destroy()
           }
         }
       }
@@ -30,19 +30,17 @@ function watch <T extends Target> (target: T): T {
       if (this[UPDATING]) {
         result = originalRender.apply(this, args)
       } else {
-        this[WATCHER]?.destructor()
-        unwatch(() => {
-          let watcher
-          watcher = this[WATCHER] = new Watch(update => {
-            if (!update) {
-              result = originalRender.apply(this, args)
-            } else if (watcher === this[WATCHER]) {
-              this[UPDATING] = true
-              this.forceUpdate()
-              this[UPDATING] = false
-            }
-          })
-        })
+        this[WATCHER]?.destroy()
+        let watcher
+        watcher = this[WATCHER] = new Watch(update => {
+          if (!update) {
+            result = originalRender.apply(this, args)
+          } else if (watcher === this[WATCHER]) {
+            this[UPDATING] = true
+            this.forceUpdate()
+            this[UPDATING] = false
+          }
+        }, true)
       }
       return result
     }
@@ -60,7 +58,7 @@ function watch <T extends Target> (target: T): T {
         }
       })
       useEffect(() => () => {
-        watcher.destructor()
+        watcher.destroy()
         watcher = undefined
       })
       return result
@@ -68,6 +66,34 @@ function watch <T extends Target> (target: T): T {
   }
 }
 
+export function getState <T> (target: T, key: keyof T): State {
+  return getDecors(target)[key] as any
+}
+
+export function getCache <T> (target: T, key: keyof T): Cache {
+  return getDecors(target)[key] as any
+}
+
+const CACHE = Symbol('Mixer cache')
+
+export function mixer <T extends Component> (target: T, key: keyof T, desc?: PropertyDescriptor) {
+  const originRender = target.render
+  target.render = function render () {
+    delete this[CACHE]
+    return originRender.apply(this, arguments)
+  }
+
+  const originGet = desc.get
+  desc.get = function () {
+    if (!(CACHE in this)) {
+      this[CACHE] = originGet.call(this)
+    }
+    return this[CACHE]
+  }
+
+  return desc
+}
+
 export default watch
 export * from 'watch-state'
-export * from '@watch-state/mixer'
+export * from '@watch-state/decorators'

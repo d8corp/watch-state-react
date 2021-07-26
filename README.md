@@ -1,11 +1,19 @@
-# @watch-state/react
-[![NPM](https://img.shields.io/npm/v/@watch-state/react.svg)](https://github.com/d8corp/watch-state-react/blob/master/CHANGELOG.md)
-[![downloads](https://img.shields.io/npm/dm/@watch-state/react.svg)](https://www.npmjs.com/package/@watch-state/react)
+<a href="https://www.npmjs.com/package/watch-state">
+  <img src="https://raw.githubusercontent.com/d8corp/watch-state/v3.3.3/img/logo.svg" align="left" width="90" height="90" alt="Watch-State logo by Mikhail Lysikov">
+</a>
+
+# &nbsp; @watch-state/react
+[![NPM](https://img.shields.io/npm/v/@watch-state/react.svg)](https://www.npmjs.com/package/@watch-state/react)
+[![downloads](https://img.shields.io/npm/dm/@watch-state/react.svg)](https://www.npmtrends.com/@watch-state/react)
+[![downloads](https://img.shields.io/badge/Changelog-⋮-brightgreen)](https://changelogs.xyz/@watch-state/react)
 [![license](https://img.shields.io/npm/l/@watch-state/react)](https://github.com/d8corp/watch-state-react/blob/master/LICENSE)
 [![tests](https://github.com/d8corp/watch-state-react/workflows/tests/badge.svg)](https://d8corp.github.io/watch-state-react/coverage/lcov-report/)
 
-State manager of React 16.8+
-### Installation
+State manager of React 16.8+ based on [watch-state](https://www.npmjs.com/package/watch-state)
+
+[![stars](https://img.shields.io/github/stars/d8corp/watch-state-react?style=social)](https://github.com/d8corp/watch-state-react/stargazers)
+[![watchers](https://img.shields.io/github/watchers/d8corp/watch-state-react?style=social)](https://github.com/d8corp/watch-state-react/watchers)
+### Install
 npm
 ```bash
 npm i @watch-state/react
@@ -14,7 +22,7 @@ yarn
 ```bash
 yarn add @watch-state/react
 ```
-### Using
+### Usage
 #### Class Component
 You can use class components.
 ```typescript jsx
@@ -35,6 +43,7 @@ class UserName extends Component {
   }
 }
 ```
+
 #### Function Component
 You can use function components.
 ```typescript jsx
@@ -56,8 +65,9 @@ const AsideMenu = watch(() => core.showAsideMenu ? (
   <div>Aside Menu</div>
 ) : null)
 ```
+
 #### Cache
-Use `cache` when you wanna cache computed values.
+Use `cache` when you want to cache computed values.
 ```typescript jsx
 import React, {Component} from 'react'
 import watch, {getState, state, cache} from '@watch-state/react'
@@ -84,6 +94,7 @@ class Items extends Component {
   }
 }
 ```
+
 #### Mixer
 Use mixer on computed values related to props
 ```typescript jsx
@@ -106,8 +117,9 @@ class User extends Component<UserProps> {
   }
 }
 ```
+
 #### Event
-Use `event` if you wanna change several states in one action.
+Use `event` if you want to change several states in one action.
 ```typescript jsx
 import React, {Component} from 'react'
 import watch, {state, event} from '@watch-state/react'
@@ -131,13 +143,12 @@ class Test extends Component {
   }
 }
 ```
+
 ### Links
 - [React](https://reactjs.org)
 - [watch-state](https://www.npmjs.com/package/watch-state)
-## Issues
-If you find a bug or have a suggestion, please file an issue on [GitHub](https://github.com/d8corp/watch-state-react/issues)  
-[![issues](https://img.shields.io/github/issues-raw/d8corp/watch-state-react)](https://github.com/d8corp/watch-state-react/issues)  
-> ---
-[![stars](https://img.shields.io/github/stars/d8corp/watch-state-react?style=social)](https://github.com/d8corp/watch-state-react/stargazers)
-[![watchers](https://img.shields.io/github/watchers/d8corp/watch-state-react?style=social)](https://github.com/d8corp/watch-state-react/watchers)
 
+## Issues
+If you find a bug or have a suggestion, please file an issue on [GitHub](https://github.com/d8corp/watch-state-react/issues)
+
+[![issues](https://img.shields.io/github/issues-raw/d8corp/watch-state-react)](https://github.com/d8corp/watch-state-react/issues)

@@ -1,4 +1,4 @@
-import {State, Watch, Cache} from 'watch-state'
+import {State, Watch, Cache, scope} from 'watch-state'
 import {getDecors} from '@watch-state/decorators'
 import {useEffect, useState, FunctionComponent, Component} from 'react'
 
@@ -74,21 +74,18 @@ export function getCache <T> (target: T, key: keyof T): Cache {
   return getDecors(target)[key] as any
 }
 
-const CACHE = Symbol('Mixer cache')
+const NULL = Symbol('Super Null')
 
 export function mixer <T extends Component> (target: T, key: keyof T, desc?: PropertyDescriptor) {
-  const originRender = target.render
-  target.render = function render () {
-    delete this[CACHE]
-    return originRender.apply(this, arguments)
-  }
+  const VALUE = Symbol('Mixer cache')
+  target[VALUE] = NULL
 
   const originGet = desc.get
   desc.get = function () {
-    if (!(CACHE in this)) {
-      this[CACHE] = originGet.call(this)
-    }
-    return this[CACHE]
+    scope.activeWatcher?.onDestroy(() => this[VALUE] = NULL)
+    return this[VALUE] === NULL
+      ? this[VALUE] = originGet.call(this)
+      : this[VALUE]
   }
 
   return desc

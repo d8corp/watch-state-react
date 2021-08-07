@@ -1,5 +1,8 @@
 # Changelog
 ## v1.3
+### v1.3.2 [![07.08.2021](https://img.shields.io/date/1628365795)](https://github.com/d8corp/watch-state-react/tree/v1.3.2)
+- updated dependency
+
 ### v1.3.1 [![27.07.2021](https://img.shields.io/date/1627404382)](https://github.com/d8corp/watch-state-react/tree/v1.3.1)
 - fixed logic of `mixer` decorator.
 

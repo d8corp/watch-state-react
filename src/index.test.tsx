@@ -1,7 +1,7 @@
 import ReactDom from 'react-dom'
 import React, {Component, ReactElement, useEffect, useState} from 'react'
 import {act} from 'react-dom/test-utils'
-import watch, {State, Cache, state, cache, getState, mixer, getCache} from '.'
+import watch, {State, Cache, state, cache, getState, mixer, getCache, useWatch} from '.'
 
 function render (component: ReactElement): HTMLDivElement {
   const div = document.createElement('div')
@@ -11,13 +11,19 @@ function render (component: ReactElement): HTMLDivElement {
 
 describe('react', () => {
   describe('function component', () => {
-    test('simple', () => {
+    test('state', () => {
       const state = new State(0)
-      const Test = watch(() => (
-        <>
-          {state.value}
-        </>
-      ))
+
+      const Test = () => {
+        const value = useWatch(state)
+
+        return (
+          <>
+            {value}
+          </>
+        )
+      }
+
       const test = render(<Test />)
       expect(test.innerHTML).toBe('0')
 
@@ -33,29 +39,97 @@ describe('react', () => {
 
       expect(test.innerHTML).toBe('2')
     })
-    test('bind', () => {
-      const state = new State(0)
-      const Test = watch((function () {
+    test('cache', () => {
+      const name = new State('Mike')
+      const surname = new State('Deight')
+      const fullName = new Cache(() => `${name.value} ${surname.value[0]}.`)
+
+      const Test = () => {
+        const value = useWatch(fullName)
+
         return (
           <>
-            {state.value}
+            {value}
           </>
         )
-      }).bind(undefined))
+      }
+
       const test = render(<Test />)
-      expect(test.innerHTML).toBe('0')
+      expect(test.innerHTML).toBe('Mike D.')
 
       act(() => {
-        state.value++
+        name.value = 'Morty'
       })
 
-      expect(test.innerHTML).toBe('1')
+      expect(test.innerHTML).toBe('Morty D.')
 
       act(() => {
-        state.value++
+        surname.value = 'Test'
       })
 
-      expect(test.innerHTML).toBe('2')
+      expect(test.innerHTML).toBe('Morty T.')
+    })
+    test('watcher', () => {
+      const name = new State('Mike')
+      const surname = new State('Deight')
+
+      const Test = () => {
+        const value = useWatch(() => `${name.value} ${surname.value[0]}.`)
+
+        return (
+          <>
+            {value}
+          </>
+        )
+      }
+
+      const test = render(<Test />)
+      expect(test.innerHTML).toBe('Mike D.')
+
+      act(() => {
+        name.value = 'Morty'
+      })
+
+      expect(test.innerHTML).toBe('Morty D.')
+
+      act(() => {
+        surname.value = 'Test'
+      })
+
+      expect(test.innerHTML).toBe('Morty T.')
+    })
+    test('example', () => {
+      const $show = new State(false)
+
+      const AsideMenuButton = () => {
+        const toggle = () => $show.value = !$show.value
+        return <button onClick={toggle} />
+      }
+
+      const AsideMenu = () => {
+        const show = useWatch($show)
+
+        return show ? (
+          <div>Aside Menu</div>
+        ) : null
+      }
+
+      const test = render(
+        <>
+          <AsideMenuButton />
+          <AsideMenu />
+        </>
+      )
+
+      expect(test.innerHTML).toBe('<button></button>')
+
+      test.querySelector('button').click()
+
+      expect(test.innerHTML).toBe('<button></button><div>Aside Menu</div>')
+
+      test.querySelector('button').click()
+
+      expect(test.innerHTML).toBe('<button></button>')
     })
   })
   describe('class component', () => {

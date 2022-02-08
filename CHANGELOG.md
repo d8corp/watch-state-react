@@ -1,4 +1,9 @@
 # Changelog
+
+## v1.4
+### v1.4.0 [![08.02.2022](https://img.shields.io/date/1644340816)](https://github.com/d8corp/watch-state-react/tree/v1.4.0)
+- added `useWatch` hook
+
 ## v1.3
 ### v1.3.2 [![07.08.2021](https://img.shields.io/date/1628365795)](https://github.com/d8corp/watch-state-react/tree/v1.3.2)
 - updated dependency

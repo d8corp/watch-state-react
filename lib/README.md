@@ -29,8 +29,8 @@ yarn add @watch-state/react
 #### Class Component
 You can use class components.
 ```typescript jsx
-import React, {Component} from 'react'
-import watch, {state} from '@watch-state/react'
+import React, { Component } from 'react'
+import watch, { state } from '@watch-state/react'
 
 @watch
 class UserName extends Component {
@@ -51,22 +51,22 @@ class UserName extends Component {
 You can use function components.
 ```typescript jsx
 import React from 'react'
-import watch, {state} from '@watch-state/react'
+import { useWatch } from '@watch-state/react'
 
-class Core {
-  @state showAsideMenu = false
-}
-
-const core = new Core()
+const $show = new State(false)
 
 const AsideMenuButton = () => {
-  const toggle = () => core.showAsideMenu = !core.showAsideMenu
+  const toggle = () => $show.value = !$show.value
   return <button onClick={toggle} />
 }
 
-const AsideMenu = watch(() => core.showAsideMenu ? (
-  <div>Aside Menu</div>
-) : null)
+const AsideMenu = () => {
+  const show = useWatch($show)
+
+  return show ? (
+    <div>Aside Menu</div>
+  ) : null
+}
 ```
 
 #### Cache

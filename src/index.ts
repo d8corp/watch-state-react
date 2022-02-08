@@ -1,6 +1,7 @@
-import {State, Watch, Cache, scope} from 'watch-state'
-import {getDecors} from '@watch-state/decorators'
-import {useEffect, useState, FunctionComponent, Component} from 'react'
+import { State, Watch, Cache, scope } from 'watch-state'
+import { getDecors } from '@watch-state/decorators'
+import {useEffect, useState, FunctionComponent, Component, useMemo} from 'react'
+import {Watcher} from "watch-state/Watch/Watch";
 
 export const WATCHER = Symbol('watcher')
 export const UPDATING = Symbol('watcher')
@@ -9,6 +10,7 @@ type Target = FunctionComponent | Component['constructor']
 
 function watch <T extends Target> (target: T): T {
   const originalRender = target.prototype?.render
+
   if (originalRender) {
     const originalComponentWillUnmount = target.prototype.componentWillUnmount
     target.prototype.componentWillUnmount = function componentWillUnmount () {
@@ -44,26 +46,9 @@ function watch <T extends Target> (target: T): T {
       }
       return result
     }
-    return target
-  } else {
-    return function Component () {
-      const setValue = useState({})[1]
-      const args = arguments
-      let result
-      let watcher = new Watch(update => {
-        if (update) {
-          setValue({})
-        } else {
-          result = target.apply(this, args)
-        }
-      })
-      useEffect(() => () => {
-        watcher.destroy()
-        watcher = undefined
-      })
-      return result
-    } as unknown as T
   }
+
+  return target
 }
 
 export function getState <T> (target: T, key: keyof T): State {
@@ -89,6 +74,33 @@ export function mixer <T extends Component> (target: T, key: keyof T, desc?: Pro
   }
 
   return desc
+}
+
+export function useWatch <T> (watcher: Watcher<T>): T
+export function useWatch <T> (cache: Cache<T>): T
+export function useWatch <T> (state: State<T>): T
+export function useWatch <T> (target: State<T> | Cache<T> | Watcher<T>): T {
+  let result: T
+
+  const watcher = useMemo(() => new Watch(update => {
+    if (target instanceof State || target instanceof Cache) {
+      result = target.value
+    } else {
+      result = target(update)
+    }
+
+    if (update) {
+      setValue(result)
+    }
+  }), [target])
+
+  const [value, setValue] = useState(result)
+
+  useEffect(() => () => {
+    watcher.destroy()
+  }, [watcher])
+
+  return value
 }
 
 export default watch

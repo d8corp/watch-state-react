@@ -1,23 +1,25 @@
-import React, { type ReactElement } from 'react'
+import { fireEvent } from '@testing-library/react'
+import React, { createRef, type ReactElement, type Ref, useState } from 'react'
 import { createRoot } from 'react-dom/client'
+import { act } from 'react-dom/test-utils'
 import { Cache, State } from 'watch-state'
 
-import { useWatch } from '.'
+import { useNewCache, useWatch } from '.'
 
 function render (component: ReactElement): HTMLDivElement {
   const div = document.createElement('div')
   const root = createRoot(div)
-  root.render(component)
+
+  act(() => {
+    root.render(component)
+  })
+
   return div
 }
 
-function wait (timeout = 0) {
-  return new Promise(resolve => setTimeout(resolve, timeout))
-}
-
 describe('react', () => {
-  describe('function component', () => {
-    test('state', async () => {
+  describe('useWatch', () => {
+    test('state', () => {
       const state = new State(0)
 
       const Test = () => {
@@ -32,23 +34,21 @@ describe('react', () => {
 
       const test = render(<Test />)
 
-      await wait()
-
       expect(test.innerHTML).toBe('0')
 
-      state.value++
-
-      await wait()
+      act(() => {
+        state.value++
+      })
 
       expect(test.innerHTML).toBe('1')
 
-      state.value++
-
-      await wait()
+      act(() => {
+        state.value++
+      })
 
       expect(test.innerHTML).toBe('2')
     })
-    test('cache', async () => {
+    test('cache', () => {
       const name = new State('Mike')
       const surname = new State('Deight')
       const fullName = new Cache(() => `${name.value} ${surname.value[0]}.`)
@@ -65,28 +65,29 @@ describe('react', () => {
 
       const test = render(<Test />)
 
-      await wait()
-
       expect(test.innerHTML).toBe('Mike D.')
 
-      name.value = 'Morty'
-
-      await wait()
+      act(() => {
+        name.value = 'Morty'
+      })
 
       expect(test.innerHTML).toBe('Morty D.')
 
-      surname.value = 'Test'
-
-      await wait()
+      act(() => {
+        surname.value = 'Test'
+      })
 
       expect(test.innerHTML).toBe('Morty T.')
     })
-    test('watcher', async () => {
+  })
+  describe('useNewCache', () => {
+    test('watcher', () => {
       const name = new State('Mike')
       const surname = new State('Deight')
 
       const Test = () => {
-        const value = useWatch(() => `${name.value} ${surname.value[0]}.`)
+        const fullName = useNewCache(() => `${name.value} ${surname.value[0]}.`)
+        const value = useWatch(fullName)
 
         return (
           <>
@@ -97,23 +98,77 @@ describe('react', () => {
 
       const test = render(<Test />)
 
-      await wait()
-
       expect(test.innerHTML).toBe('Mike D.')
 
-      name.value = 'Morty'
-
-      await wait()
+      act(() => {
+        name.value = 'Morty'
+      })
 
       expect(test.innerHTML).toBe('Morty D.')
 
-      surname.value = 'Test'
-
-      await wait()
+      act(() => {
+        surname.value = 'Test'
+      })
 
       expect(test.innerHTML).toBe('Morty T.')
     })
-    test('example', async () => {
+    test('deps', () => {
+      const name = new State('Mike')
+      const surname = new State('Deight')
+
+      const Test = ({ say }: { say: string }) => {
+        const text = useNewCache(() => `${name.value} ${surname.value[0]}. says ${say}`, [say])
+        const value = useWatch(text)
+
+        return (
+          <>
+            {value}
+          </>
+        )
+      }
+
+      const Parent = ({ inputRef }: { inputRef: Ref<HTMLInputElement> }) => {
+        const [text, setText] = useState('Hello!')
+
+        return (
+          <>
+            <Test say={text} />
+            <input ref={inputRef} onInput={(e) => setText(e.currentTarget.value)} />
+          </>
+        )
+      }
+
+      const inputRef = createRef<HTMLInputElement>()
+
+      const test = render(<Parent inputRef={inputRef} />)
+
+      expect(test.innerHTML).toBe('Mike D. says Hello!<input>')
+
+      act(() => {
+        name.value = 'Morty'
+      })
+
+      expect(test.innerHTML).toBe('Morty D. says Hello!<input>')
+
+      act(() => {
+        surname.value = 'Test'
+      })
+
+      expect(test.innerHTML).toBe('Morty T. says Hello!<input>')
+
+      fireEvent.input(inputRef.current, { target: { value: 'Buy 8)' } })
+
+      expect(test.innerHTML).toBe('Morty T. says Buy 8)<input>')
+
+      act(() => {
+        name.value = 'Rick'
+      })
+
+      expect(test.innerHTML).toBe('Rick T. says Buy 8)<input>')
+    })
+  })
+  describe('readme', () => {
+    test('example 1', () => {
       const $show = new State(false)
 
       const AsideMenuButton = () => {
@@ -126,11 +181,7 @@ describe('react', () => {
       const AsideMenu = () => {
         const show = useWatch($show)
 
-        return show
-          ? (
-            <div>Aside Menu</div>
-            )
-          : null
+        return show ? <div>Aside Menu</div> : null
       }
 
       const test = render(
@@ -140,19 +191,17 @@ describe('react', () => {
         </>,
       )
 
-      await wait()
-
       expect(test.innerHTML).toBe('<button></button>')
 
-      test.querySelector('button').click()
-
-      await wait()
+      act(() => {
+        test.querySelector('button').click()
+      })
 
       expect(test.innerHTML).toBe('<button></button><div>Aside Menu</div>')
 
-      test.querySelector('button').click()
-
-      await wait()
+      act(() => {
+        test.querySelector('button').click()
+      })
 
       expect(test.innerHTML).toBe('<button></button>')
     })

@@ -1,19 +1,35 @@
-import { useSyncExternalStore } from 'react'
-import { type Observable, Watch, type Watcher } from 'watch-state'
+import { type DependencyList, useEffect, useMemo, useRef, useSyncExternalStore } from 'react'
+import { Cache, type Observable, State, Watch, type Watcher } from 'watch-state'
 
-export function useWatch<S> (state: Observable<S> | Watcher<S>): S {
-  const getValue = (update: boolean) => typeof state === 'function'
-    ? state(update)
-    : state.value
-
+export function useWatch<S> (state: Observable<S>): S {
   return useSyncExternalStore(callback => {
     const watcher = new Watch(update => {
-      getValue(update)
       if (update) callback()
+      return state.value
     }, true)
 
     return () => {
       watcher.destroy()
     }
-  }, () => getValue(false))
+  }, () => state.value)
+}
+
+export function useNewState<S> (defaultValue?: S): State<S> {
+  const ref = useRef<State<S>>()
+
+  return ref.current || (ref.current = new State(defaultValue))
+}
+
+export function useNewCache<S> (watcher?: Watcher<S>, deps?: DependencyList): Cache<S> {
+  const ref = useRef<Cache<S>>()
+
+  useEffect(() => () => {
+    ref.current.destroy()
+  }, [])
+
+  return useMemo(() => {
+    ref.current?.destroy()
+
+    return (ref.current = new Cache<S>(watcher, true))
+  }, deps)
 }

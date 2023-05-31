@@ -1,0 +1,54 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint",
+    "simple-import-sort"
+  ],
+  "extends": [
+    "standard-with-typescript",
+    "standard-jsx"
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "tsconfigRootDir": ".",
+    "project": "./tsconfig.json"
+  },
+  "env": {
+    "jest": true
+  },
+  "rules": {
+    "@typescript-eslint/prefer-optional-chain": "off",
+    "@typescript-eslint/ban-types": "off",
+    "no-redeclare": "off",
+    "no-new": "off",
+    "@typescript-eslint/no-confusing-void-expression": "off",
+    "@typescript-eslint/restrict-plus-operands": "off",
+    "no-control-regex": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/prefer-function-type": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/promise-function-async": "off",
+    "@typescript-eslint/comma-dangle": "off",
+    "@typescript-eslint/array-type": "off",
+    "@typescript-eslint/no-invalid-void-type": "off",
+    "@typescript-eslint/no-dynamic-delete": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/prefer-nullish-coalescing": "off",
+    "@typescript-eslint/consistent-type-assertions": "off",
+    "no-unused-vars": "off",
+    "one-var": "off",
+    "react/jsx-key": "off",
+    "import/no-absolute-path": "off",
+    "react/no-children-prop": "off",
+    "comma-dangle": ["error", "always-multiline"],
+    "react/jsx-closing-bracket-location": ["error", {
+      "nonEmpty": "after-props"
+    }],
+    "simple-import-sort/imports": "error"
+  }
+}

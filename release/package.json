@@ -1,11 +1,23 @@
 {
   "name": "@watch-state/react",
-  "version": "1.4.0",
+  "version": "2.0.0-alpha.0",
   "description": "State manager of React",
   "main": "index.js",
   "module": "index.es6.js",
   "jsnext:main": "index.es6.js",
   "types": "index.d.ts",
+  "scripts": {
+    "build": "innetjs release",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "speed": "innetjs run speed.test.ts",
+    "release": "innetjs release -p",
+    "patch": "innetjs patch",
+    "minor": "innetjs minor",
+    "major": "innetjs major",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/d8corp/watch-state-react.git"
@@ -29,8 +41,7 @@
   },
   "homepage": "https://github.com/d8corp/watch-state-react",
   "dependencies": {
-    "react": ">=16.8",
-    "watch-state": "^3.4.1",
-    "@watch-state/decorators": "^1.2.3"
+    "react": ">=18",
+    "watch-state": "^3.5.0-alpha.2"
   }
 }

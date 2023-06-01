@@ -100,9 +100,9 @@ const User = () => {
 `useNewState` helps to create a `State` inside react component.
 
 ```typescript jsx
-import {Observable} from 'watch-state'
-import {useWatch, useNewState} from '@watch-state/react'
-import {useEffect} from "react";
+import { Observable } from 'watch-state'
+import { useWatch, useNewState } from '@watch-state/react'
+import { useEffect } from "react";
 
 interface ChildProps {
   value: Observable<string>

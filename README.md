@@ -12,7 +12,7 @@
 [![license](https://img.shields.io/npm/l/@watch-state/react)](https://github.com/d8corp/watch-state-react/blob/master/LICENSE)
 [![tests](https://github.com/d8corp/watch-state-react/workflows/tests/badge.svg)](https://d8corp.github.io/watch-state-react/coverage/lcov-report/)
 
-State manager of React 18+ based on [watch-state](https://www.npmjs.com/package/watch-state)
+State manager for React 18+ based on [watch-state](https://www.npmjs.com/package/watch-state)
 
 [![stars](https://img.shields.io/github/stars/d8corp/watch-state-react?style=social)](https://github.com/d8corp/watch-state-react/stargazers)
 [![watchers](https://img.shields.io/github/watchers/d8corp/watch-state-react?style=social)](https://github.com/d8corp/watch-state-react/watchers)
@@ -26,6 +26,8 @@ npm i @watch-state/react
 ```
 
 ### Usage
+
+#### useWatch
 
 You can observe only function components, by `useWatch` hook.
 
@@ -49,6 +51,105 @@ const AsideMenu = () => {
     <div>Aside Menu</div>
   ) : null
 }
+```
+
+You can use all features [watch-state](https://www.npmjs.com/search?q=%40watch-state) ecosystem.
+
+`Cache` example:
+
+```typescript jsx
+import { State, Cache } from 'watch-state'
+import { useWatch } from '@watch-state/react'
+
+const name = new State('Mike')
+const surname = new State('Deight')
+const fullName = new Cache(() => `${name.value} ${surname.value[0]}.`)
+
+const User = () => {
+  const value = useWatch(fullName)
+
+  return (
+    <>{value}</>
+  )
+}
+```
+
+[@watch-state/history-api](https://www.npmjs.com/package/@watch-state/history-api) example:
+
+```typescript jsx
+import { useWatch } from '@watch-state/react'
+import { locationPath, historyPush } from '@watch-state/history-api'
+
+const goTest = () => {
+  historyPush('/test')
+}
+
+const User = () => {
+  const path = useWatch(locationPath)
+
+  return (
+    <button onClick={goTest}>
+      {path}
+    </button>
+  )
+}
+```
+
+#### useNewState
+
+`useNewState` helps to create a `State` inside react component.
+
+```typescript jsx
+import { Observable } from 'watch-state'
+import { useWatch, useNewState } from '@watch-state/react'
+
+interface ChildProps {
+  value: Observable<string>
+}
+
+const Parent = () => {
+  console.log('Parent creates value once');
+
+  const value = useNewState('Default value')
+
+  return (
+    <Test value={value} />
+  )
+}
+
+const Test = ({ value }: ChildProps) => {
+  console.log('Test renders once and provides value to Child', value);
+
+  return (
+    <Child value={value} />
+  )
+}
+
+const Child = ({ value }: ChildProps) => {
+  console.log('Child renders on value canges', value);
+
+  const $value = useWatch(value)
+
+  return (
+    <div>
+      {$value}
+    </div>
+  )
+}
+```
+
+#### useNewCache
+
+`useNewCache` helps to create a `Cache` inside a component.
+
+```typescript jsx
+
+```
+
+`useNewCache` also helps to combine props and `Observable` inside a component.
+
+```typescript jsx
+
 ```
 
 ### Links

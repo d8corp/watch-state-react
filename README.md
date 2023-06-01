@@ -100,32 +100,43 @@ const User = () => {
 `useNewState` helps to create a `State` inside react component.
 
 ```typescript jsx
-import { Observable } from 'watch-state'
-import { useWatch, useNewState } from '@watch-state/react'
+import {Observable} from 'watch-state'
+import {useWatch, useNewState} from '@watch-state/react'
+import {useEffect} from "react";
 
 interface ChildProps {
   value: Observable<string>
 }
 
 const Parent = () => {
-  console.log('Parent creates value once');
+  console.log('Parent creates State once');
 
-  const value = useNewState('Default value')
+  const state = useNewState(0)
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      state.value++
+    }, 1000)
+    
+    return () => {
+      clearInterval(t)
+    }
+  }, [])
 
   return (
-    <Test value={value} />
+    <Test value={state}/>
   )
 }
 
-const Test = ({ value }: ChildProps) => {
+const Test = ({value}: ChildProps) => {
   console.log('Test renders once and provides value to Child', value);
 
   return (
-    <Child value={value} />
+    <Child value={value}/>
   )
 }
 
-const Child = ({ value }: ChildProps) => {
+const Child = ({value}: ChildProps) => {
   console.log('Child renders on value canges', value);
 
   const $value = useWatch(value)

@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client'
 import { act } from 'react-dom/test-utils'
 import { Cache, State } from 'watch-state'
 
-import { useNewCache, useWatch } from '.'
+import { useNewCache, useWatch, useWatcher } from '.'
 
 function render (component: ReactElement): HTMLDivElement {
   const div = document.createElement('div')
@@ -165,6 +165,37 @@ describe('react', () => {
       })
 
       expect(test.innerHTML).toBe('Rick T. says Buy 8)<input>')
+    })
+  })
+  describe('useWatcher', () => {
+    it('should works with state', () => {
+      const state = new State(0)
+
+      const Test = () => {
+        const value = useWatcher(() => state.value)
+
+        return (
+          <>
+            {value}
+          </>
+        )
+      }
+
+      const test = render(<Test />)
+
+      expect(test.innerHTML).toBe('0')
+
+      act(() => {
+        state.value++
+      })
+
+      expect(test.innerHTML).toBe('1')
+
+      act(() => {
+        state.value++
+      })
+
+      expect(test.innerHTML).toBe('2')
     })
   })
   describe('readme', () => {

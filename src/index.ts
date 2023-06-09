@@ -14,6 +14,19 @@ export function useWatch<S> (state: Observable<S>): S {
   }, () => state.value)
 }
 
+export function useWatcher<S> (state: Watcher<S>): S {
+  return useSyncExternalStore(callback => {
+    const watcher = new Watch(update => {
+      if (update) callback()
+      return state(update)
+    }, true)
+
+    return () => {
+      watcher.destroy()
+    }
+  }, () => state(false))
+}
+
 export function useNewState<S> (defaultValue?: S): State<S> {
   const ref = useRef<State<S>>()
 

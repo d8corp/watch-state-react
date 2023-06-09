@@ -35,8 +35,8 @@ You can observe only function components, by `useWatch` hook.
 import { State } from 'watch-state'
 import { useWatch } from '@watch-state/react'
 
-const $show = new State(false)
-const toggleShow = () => $show.value = !$show.value
+const show = new State(false)
+const toggleShow = () => show.value = !show.value
 
 const AsideMenuButton = () => (
   <button
@@ -45,11 +45,149 @@ const AsideMenuButton = () => (
 )
 
 const AsideMenu = () => {
-  const show = useWatch($show)
+  const isShow = useWatch(show)
 
-  return show ? (
+  return isShow ? (
     <div>Aside Menu</div>
   ) : null
+}
+```
+
+#### useWatcher
+
+You can observe only function components, by `useWatcher` hook.
+
+```typescript jsx
+import { State } from 'watch-state'
+import { useWatcher } from '@watch-state/react'
+
+const show = new State(false)
+const toggleShow = () => show.value = !show.value
+
+const AsideMenuButton = () => (
+  <button
+    onClick={toggleShow}
+  />
+)
+
+const AsideMenu = () => {
+  const isShow = useWatcher(() => show.value)
+  // here is the difference ^^^^^^^^^^^^^^^
+
+  return isShow ? (
+    <div>Aside Menu</div>
+  ) : null
+}
+```
+
+#### useNewState
+
+`useNewState` helps to create a `State` inside react component.
+
+```typescript jsx
+import { Observable } from 'watch-state'
+import { useWatch, useNewState } from '@watch-state/react'
+import { useEffect } from "react";
+
+interface ChildProps {
+  value: Observable<string>
+}
+
+const Parent = () => {
+  console.log('Parent creates State once');
+
+  const state = useNewState(0)
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      state.value++
+    }, 1000)
+    
+    return () => {
+      clearInterval(t)
+    }
+  }, [])
+
+  return (
+    <Test value={state}/>
+  )
+}
+
+const Test = ({ value }: ChildProps) => {
+  console.log('Test renders once and provides value to Child', value);
+
+  return (
+    <Child value={value}/>
+  )
+}
+
+const Child = ({ value }: ChildProps) => {
+  console.log('Child renders on value canges', value);
+
+  const currentValue = useWatch(value)
+
+  return (
+    <div>
+      {currentValue}
+    </div>
+  )
+}
+```
+
+#### useNewCache
+
+`useNewCache` helps to create a `Cache` inside a component.
+
+```typescript jsx
+import { State } from 'watch-state'
+import { useWatch, useNewCache } from '@watch-state/react'
+
+const name = new State('Mike')
+const surname = new State('Deight')
+
+const Parent = () => {
+  const fullName = useNewCache(() => `${name.value} ${surname.value[0]}.`)
+  // renders once
+  return <Child fullName={fullName} />
+}
+
+interface ChildProps {
+  fullName: Observable<string>
+}
+
+const Child = ({ fullName }: ChildProps) => {
+  const value = useWatch(fullName)
+  // renders when fullName canges
+  return <div>{value}</div>
+}
+```
+
+`useNewCache` also helps to combine props and `Observable` inside a component.
+
+```typescript jsx
+import { State } from 'watch-state'
+import { useWatch, useNewCache } from '@watch-state/react'
+
+const name = new State('Mike')
+
+interface ParentProps {
+  surname: string
+}
+
+const Parent = ({ surname }: ParentProps) => {
+  const fullName = useNewCache(() => `${name.value} ${surname[0]}.`, [surname])
+  // renders when surname changes
+  return <Child fullName={fullName} />
+}
+
+interface ChildProps {
+  fullName: Observable<string>
+}
+
+const Child = ({ fullName }: ChildProps) => {
+  const value = useWatch(fullName)
+  // renders when fullName canges
+  return <div>{value}</div>
 }
 ```
 
@@ -95,72 +233,37 @@ const User = () => {
 }
 ```
 
-#### useNewState
-
-`useNewState` helps to create a `State` inside react component.
+[@watch-state/async](https://www.npmjs.com/package/@watch-state/async) example:
 
 ```typescript jsx
-import { Observable } from 'watch-state'
-import { useWatch, useNewState } from '@watch-state/react'
-import { useEffect } from "react";
+import { useWatch, useWatcher } from '@watch-state/react'
+import Async from '@watch-state/async'
 
-interface ChildProps {
-  value: Observable<string>
-}
+const api = new Async(
+  () => fetch('/api/test')
+    .then(r => r.json())
+)
 
-const Parent = () => {
-  console.log('Parent creates State once');
-
-  const state = useNewState(0)
-
-  useEffect(() => {
-    const t = setInterval(() => {
-      state.value++
-    }, 1000)
-    
-    return () => {
-      clearInterval(t)
-    }
-  }, [])
-
-  return (
-    <Test value={state}/>
-  )
-}
-
-const Test = ({value}: ChildProps) => {
-  console.log('Test renders once and provides value to Child', value);
+const User = () => {
+  const value = useWatch(api)
+  const loading = useWatcher(() => api.loading)
+  const loaded = useWatcher(() => api.loaded)
+  const error = useWatcher(() => api.error)
+  
+  if (error) {
+    return <div>Error!</div>
+  }
+  
+  if (!loaded) {
+    return <div>Loading</div>
+  }
 
   return (
-    <Child value={value}/>
-  )
-}
-
-const Child = ({value}: ChildProps) => {
-  console.log('Child renders on value canges', value);
-
-  const $value = useWatch(value)
-
-  return (
-    <div>
-      {$value}
+    <div className={loading && 'loading'}>
+      {value.some.fields}
     </div>
   )
 }
-```
-
-#### useNewCache
-
-`useNewCache` helps to create a `Cache` inside a component.
-
-```typescript jsx
-
-```
-
-`useNewCache` also helps to combine props and `Observable` inside a component.
-
-```typescript jsx
-
 ```
 
 ### Links

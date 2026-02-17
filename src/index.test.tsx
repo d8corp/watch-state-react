@@ -2,9 +2,9 @@ import { fireEvent } from '@testing-library/react'
 import React, { createRef, type ReactElement, type Ref, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { act } from 'react-dom/test-utils'
-import { Cache, State } from 'watch-state'
+import { State } from 'watch-state'
 
-import { useNewCache, useWatch, useWatcher } from '.'
+import { useNewCache, useWatch } from '.'
 
 function render (component: ReactElement): HTMLDivElement {
   const div = document.createElement('div')
@@ -18,68 +18,6 @@ function render (component: ReactElement): HTMLDivElement {
 }
 
 describe('react', () => {
-  describe('useWatch', () => {
-    test('state', () => {
-      const state = new State(0)
-
-      const Test = () => {
-        const value = useWatch(state)
-
-        return (
-          <>
-            {value}
-          </>
-        )
-      }
-
-      const test = render(<Test />)
-
-      expect(test.innerHTML).toBe('0')
-
-      act(() => {
-        state.value++
-      })
-
-      expect(test.innerHTML).toBe('1')
-
-      act(() => {
-        state.value++
-      })
-
-      expect(test.innerHTML).toBe('2')
-    })
-    test('cache', () => {
-      const name = new State('Mike')
-      const surname = new State('Deight')
-      const fullName = new Cache(() => `${name.value} ${surname.value[0]}.`)
-
-      const Test = () => {
-        const value = useWatch(fullName)
-
-        return (
-          <>
-            {value}
-          </>
-        )
-      }
-
-      const test = render(<Test />)
-
-      expect(test.innerHTML).toBe('Mike D.')
-
-      act(() => {
-        name.value = 'Morty'
-      })
-
-      expect(test.innerHTML).toBe('Morty D.')
-
-      act(() => {
-        surname.value = 'Test'
-      })
-
-      expect(test.innerHTML).toBe('Morty T.')
-    })
-  })
   describe('useNewCache', () => {
     test('watcher', () => {
       const name = new State('Mike')
@@ -112,6 +50,7 @@ describe('react', () => {
 
       expect(test.innerHTML).toBe('Morty T.')
     })
+
     test('deps', () => {
       const name = new State('Mike')
       const surname = new State('Deight')
@@ -167,37 +106,7 @@ describe('react', () => {
       expect(test.innerHTML).toBe('Rick T. says Buy 8)<input>')
     })
   })
-  describe('useWatcher', () => {
-    it('should works with state', () => {
-      const state = new State(0)
 
-      const Test = () => {
-        const value = useWatcher(() => state.value)
-
-        return (
-          <>
-            {value}
-          </>
-        )
-      }
-
-      const test = render(<Test />)
-
-      expect(test.innerHTML).toBe('0')
-
-      act(() => {
-        state.value++
-      })
-
-      expect(test.innerHTML).toBe('1')
-
-      act(() => {
-        state.value++
-      })
-
-      expect(test.innerHTML).toBe('2')
-    })
-  })
   describe('readme', () => {
     test('example 1', () => {
       const $show = new State(false)
@@ -206,6 +115,7 @@ describe('react', () => {
         const toggle = () => {
           $show.value = !$show.value
         }
+
         return <button onClick={toggle} />
       }
 

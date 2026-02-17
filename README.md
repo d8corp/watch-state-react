@@ -53,33 +53,6 @@ const AsideMenu = () => {
 }
 ```
 
-#### useWatcher
-
-You can observe only function components, by `useWatcher` hook.
-
-```typescript jsx
-import { State } from 'watch-state'
-import { useWatcher } from '@watch-state/react'
-
-const show = new State(false)
-const toggleShow = () => show.value = !show.value
-
-const AsideMenuButton = () => (
-  <button
-    onClick={toggleShow}
-  />
-)
-
-const AsideMenu = () => {
-  const isShow = useWatcher(() => show.value)
-  // here is the difference ^^^^^^^^^^^^^^^
-
-  return isShow ? (
-    <div>Aside Menu</div>
-  ) : null
-}
-```
-
 #### useNewState
 
 `useNewState` helps to create a `State` inside react component.
@@ -134,19 +107,19 @@ const Child = ({ value }: ChildProps) => {
 }
 ```
 
-#### useNewCache
+#### useNewCompute
 
-`useNewCache` helps to create a `Cache` inside a component.
+`useNewCompute` helps to create a `Compute` inside a component.
 
 ```typescript jsx
 import { State } from 'watch-state'
-import { useWatch, useNewCache } from '@watch-state/react'
+import { useWatch, useNewCompute } from '@watch-state/react'
 
 const name = new State('Mike')
 const surname = new State('Deight')
 
 const Parent = () => {
-  const fullName = useNewCache(() => `${name.value} ${surname.value[0]}.`)
+  const fullName = useNewCompute(() => `${name.value} ${surname.value[0]}.`)
   // renders once
   return <Child fullName={fullName} />
 }
@@ -162,11 +135,11 @@ const Child = ({ fullName }: ChildProps) => {
 }
 ```
 
-`useNewCache` also helps to combine props and `Observable` inside a component.
+`useNewCompute` also helps to combine props and `Observable` inside a component.
 
 ```typescript jsx
 import { State } from 'watch-state'
-import { useWatch, useNewCache } from '@watch-state/react'
+import { useWatch, useNewCompute } from '@watch-state/react'
 
 const name = new State('Mike')
 
@@ -175,7 +148,7 @@ interface ParentProps {
 }
 
 const Parent = ({ surname }: ParentProps) => {
-  const fullName = useNewCache(() => `${name.value} ${surname[0]}.`, [surname])
+  const fullName = useNewCompute(() => `${name.value} ${surname[0]}.`, [surname])
   // renders when surname changes
   return <Child fullName={fullName} />
 }
@@ -193,15 +166,15 @@ const Child = ({ fullName }: ChildProps) => {
 
 You can use all features [watch-state](https://www.npmjs.com/search?q=%40watch-state) ecosystem.
 
-`Cache` example:
+`Compute` example:
 
 ```typescript jsx
-import { State, Cache } from 'watch-state'
+import { State, Compute } from 'watch-state'
 import { useWatch } from '@watch-state/react'
 
 const name = new State('Mike')
 const surname = new State('Deight')
-const fullName = new Cache(() => `${name.value} ${surname.value[0]}.`)
+const fullName = new Compute(() => `${name.value} ${surname.value[0]}.`)
 
 const User = () => {
   const value = useWatch(fullName)

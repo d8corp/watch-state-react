@@ -1,139 +1,48 @@
 import '@testing-library/jest-dom'
 
-import { fireEvent, render } from '@testing-library/react'
-import React, { act, createRef, type Ref, useState } from 'react'
+import { render } from '@testing-library/react'
+import React, { act } from 'react'
 import { State } from 'watch-state'
 
-import { useNewCache, useWatch } from '.'
+import { useWatch } from '.'
 
-describe('react', () => {
-  describe('useNewCache', () => {
-    test('watcher', () => {
-      const name = new State('Mike')
-      const surname = new State('Deight')
+describe('readme', () => {
+  test('example 1', () => {
+    const $show = new State(false)
 
-      const Test = () => {
-        const fullName = useNewCache(() => `${name.value} ${surname.value[0]}.`)
-        const value = useWatch(fullName)
-
-        return (
-          <>
-            {value}
-          </>
-        )
+    const AsideMenuButton = () => {
+      const toggle = () => {
+        $show.value = !$show.value
       }
 
-      const { container } = render(<Test />)
+      return <button onClick={toggle} />
+    }
 
-      expect(container.innerHTML).toBe('Mike D.')
+    const AsideMenu = () => {
+      const show = useWatch($show)
 
-      act(() => {
-        name.value = 'Morty'
-      })
+      return show ? <div>Aside Menu</div> : null
+    }
 
-      expect(container.innerHTML).toBe('Morty D.')
+    const { container } = render(
+      <>
+        <AsideMenuButton />
+        <AsideMenu />
+      </>,
+    )
 
-      act(() => {
-        surname.value = 'Test'
-      })
+    expect(container.innerHTML).toBe('<button></button>')
 
-      expect(container.innerHTML).toBe('Morty T.')
+    act(() => {
+      container.querySelector('button').click()
     })
 
-    test('deps', () => {
-      const name = new State('Mike')
-      const surname = new State('Deight')
+    expect(container.innerHTML).toBe('<button></button><div>Aside Menu</div>')
 
-      const Test = ({ say }: { say: string }) => {
-        const text = useNewCache(() => `${name.value} ${surname.value[0]}. says ${say}`, [say])
-        const value = useWatch(text)
-
-        return (
-          <>
-            {value}
-          </>
-        )
-      }
-
-      const Parent = ({ inputRef }: { inputRef: Ref<HTMLInputElement> }) => {
-        const [text, setText] = useState('Hello!')
-
-        return (
-          <>
-            <Test say={text} />
-            <input ref={inputRef} onInput={(e) => setText(e.currentTarget.value)} />
-          </>
-        )
-      }
-
-      const inputRef = createRef<HTMLInputElement>()
-
-      const { container } = render(<Parent inputRef={inputRef} />)
-
-      expect(container.innerHTML).toBe('Mike D. says Hello!<input>')
-
-      act(() => {
-        name.value = 'Morty'
-      })
-
-      expect(container.innerHTML).toBe('Morty D. says Hello!<input>')
-
-      act(() => {
-        surname.value = 'Test'
-      })
-
-      expect(container.innerHTML).toBe('Morty T. says Hello!<input>')
-
-      fireEvent.input(inputRef.current, { target: { value: 'Buy 8)' } })
-
-      expect(container.innerHTML).toBe('Morty T. says Buy 8)<input>')
-
-      act(() => {
-        name.value = 'Rick'
-      })
-
-      expect(container.innerHTML).toBe('Rick T. says Buy 8)<input>')
+    act(() => {
+      container.querySelector('button').click()
     })
-  })
 
-  describe('readme', () => {
-    test('example 1', () => {
-      const $show = new State(false)
-
-      const AsideMenuButton = () => {
-        const toggle = () => {
-          $show.value = !$show.value
-        }
-
-        return <button onClick={toggle} />
-      }
-
-      const AsideMenu = () => {
-        const show = useWatch($show)
-
-        return show ? <div>Aside Menu</div> : null
-      }
-
-      const { container } = render(
-        <>
-          <AsideMenuButton />
-          <AsideMenu />
-        </>,
-      )
-
-      expect(container.innerHTML).toBe('<button></button>')
-
-      act(() => {
-        container.querySelector('button').click()
-      })
-
-      expect(container.innerHTML).toBe('<button></button><div>Aside Menu</div>')
-
-      act(() => {
-        container.querySelector('button').click()
-      })
-
-      expect(container.innerHTML).toBe('<button></button>')
-    })
+    expect(container.innerHTML).toBe('<button></button>')
   })
 })

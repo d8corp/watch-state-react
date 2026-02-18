@@ -14,7 +14,7 @@
 
 `@watch-state/react` provides **React hooks for watch-state** — a lightweight, high-performance reactive state engine.
 
-Use `useWatch()` to subscribe components to state changes with **zero overhead** and **automatic re-render optimization**.
+Use `useWatch()` to subscribe components to state changes with **minimal overhead** and **automatic re-render optimization** — when combined with `React.memo` for child components that receive observables as props.
 
 Built on top of [watch-state](https://www.npmjs.com/package/watch-state).
 
@@ -82,22 +82,32 @@ const Button = () => {
 
 #### Computed Functions
 
-You can pass a function to `useWatch()` to create computed values that automatically track dependencies. The function will re-execute whenever any observable accessed within it changes, ensuring your derived values stay in sync with the source data.
+You can pass a function to `useWatch()` to create a reactive selector. The function may be called multiple times during a single render, so it must be pure and simple. The component re-renders **only if the returned value changes** (compared with `Object.is`).
 
-This is especially useful when combining multiple observables with simple calculations. For complex computations, consider using `Compute` from watch-state, which provides memoization.
+This is ideal for lightweight, pure selections — e.g. extracting a field or combining observables.
+
+```tsx
+const $user = new State({ name: 'Mike', age: 30 })
+
+const UserName = () => {
+  const name = useWatch(() => $user.value.name)
+
+  return <div>Hello, {name}!</div>
+}
+```
+
+You can also combine multiple observables in one selector — the result updates reactively when any dependency changes.
 
 ```tsx
 const $price = new State(100)
-const $quantity = new State(5)
+const $quantity = new State(2)
 
-const CartItem = () => {
+const Total = () => {
   const total = useWatch(() => $price.value * $quantity.value)
 
   return <div>Total: ${total}</div>
 }
 ```
-
-In this example, `total` automatically recalculates whenever `$price` or `$quantity` changes — without needing to manually subscribe to each `State`.
 
 #### Combining with React State or Props
 
@@ -158,7 +168,20 @@ const Counter = () => {
 ### useNewCompute
 ###### [🏠︎](#index) / [Hooks](#hooks) / useNewCompute [↑](#usenewstate)
 
-**Create a Compute instance inside a React component with optional dependency array.**
+Creates a reactive computed value that automatically updates when its dependencies change. The hook returns a `Compute` instance that can be watched using `useWatch`.
+
+**Parameters:**
+- `watcher` — A function that returns the computed value. This function can access reactive `State` or `Compute` instances.
+- `deps` (optional) — A dependency array that triggers recomputation when values change. Use this for props or external values that should trigger an update.
+
+**Returns:**
+- A `Compute` instance containing the computed value.
+
+**Behavior:**
+- Automatically tracks reactive dependencies (State/Compute instances) accessed within the watcher function
+- Supports manual dependency array for prop-based recomputation
+- Cleans up automatically when the component unmounts
+- Maintains computation result across re-renders
 
 ```tsx
 import { State } from 'watch-state'

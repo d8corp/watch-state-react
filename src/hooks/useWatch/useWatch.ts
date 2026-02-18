@@ -41,6 +41,6 @@ export type UseWatchArgument<T> = Observable<T> | (() => T)
 export function useWatch<T> (state: UseWatchArgument<T>): T {
   return useSyncExternalStore(
     subscribe,
-    () => typeof state === 'function' ? state() : state.value,
+    typeof state === 'function' ? state : () => state.value,
   )
 }

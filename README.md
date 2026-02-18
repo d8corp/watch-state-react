@@ -14,8 +14,6 @@
 
 `@watch-state/react` provides **React hooks for watch-state** — a lightweight, high-performance reactive state engine.
 
-Use `useWatch()` to subscribe components to state changes with **minimal overhead** and **automatic re-render optimization** — when combined with `React.memo` for child components that receive observables as props.
-
 Built on top of [watch-state](https://www.npmjs.com/package/watch-state).
 
 [![stars](https://img.shields.io/github/stars/d8corp/watch-state-react?style=social)](https://github.com/d8corp/watch-state-react/stargazers)

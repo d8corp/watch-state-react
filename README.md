@@ -135,6 +135,33 @@ const CartItem = ({ discountRate }) => {
 
 This pattern is useful when you need to track both global state (via `useWatch`) and local component state (via `useState` or props).
 
+In most cases, it's better to wrap the computation in `useMemo` to prevent unnecessary recalculations, especially when the computation is expensive.
+
+```tsx
+const $price = new State(100)
+
+const CartItem = ({ discountRate }) => {
+  const [quantity, setQuantity] = useState(0)
+  const price = useWatch($price)
+
+  const total = useMemo(() => {
+    const subtotal = price * quantity
+    const discount = quantity > 10 ? subtotal * discountRate : 0
+
+    return subtotal - discount
+  }, [price, quantity, discountRate])
+
+  return (
+    <div>
+      <p>Price: ${price} × Quantity: {quantity} = ${total}</p>
+      {quantity > 10 && <p>Bulk discount applied!</p>}
+      <button onClick={() => setQuantity(q => q - 1)}>-</button>
+      <button onClick={() => setQuantity(q => q + 1)}>+</button>
+    </div>
+  )
+}
+```
+
 ### useNewState
 ###### [🏠︎](#index) / [Hooks](#hooks) / useNewState [↑](#usewatch) [↓](#usenewcompute)
 

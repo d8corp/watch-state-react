@@ -14,8 +14,6 @@
 
 `@watch-state/react` provides **React hooks for watch-state** — a lightweight, high-performance reactive state engine.
 
-Built on top of [watch-state](https://www.npmjs.com/package/watch-state).
-
 [![stars](https://img.shields.io/github/stars/d8corp/watch-state-react?style=social)](https://github.com/d8corp/watch-state-react/stargazers)
 [![watchers](https://img.shields.io/github/watchers/d8corp/watch-state-react?style=social)](https://github.com/d8corp/watch-state-react/watchers)
 

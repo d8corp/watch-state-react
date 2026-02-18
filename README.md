@@ -29,7 +29,7 @@
 ## Install
 ###### [🏠︎](#index) / Install [↓](#hooks)
 
-**Requires React 18+ and [watch-state](https://www.npmjs.com/package/watch-state).**
+**Requires [React 18+](https://www.npmjs.com/package/react) and [watch-state 3.5+](https://www.npmjs.com/package/watch-state).**
 
 Use with any modern bundler (Vite, Webpack, Rollup, etc.) or framework (Next.js, Remix, etc.).
 

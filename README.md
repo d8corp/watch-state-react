@@ -80,7 +80,7 @@ const Button = () => {
 
 You can pass a function to `useWatch()` to create a reactive selector. The function may be called multiple times during a single render, so it must be pure and simple. The component re-renders **only if the returned value changes** (compared with `Object.is`).
 
-This is ideal for lightweight, pure selections — e.g. extracting a field or combining observables.
+This is ideal for lightweight, pure selections — e.g. extracting a field.
 
 ```tsx
 const $user = new State({ name: 'Mike', age: 30 })

@@ -1,21 +1,10 @@
-import { fireEvent } from '@testing-library/react'
-import React, { createRef, type ReactElement, type Ref, useState } from 'react'
-import { createRoot } from 'react-dom/client'
-import { act } from 'react-dom/test-utils'
+import '@testing-library/jest-dom'
+
+import { fireEvent, render } from '@testing-library/react'
+import React, { act, createRef, type Ref, useState } from 'react'
 import { State } from 'watch-state'
 
 import { useNewCache, useWatch } from '.'
-
-function render (component: ReactElement): HTMLDivElement {
-  const div = document.createElement('div')
-  const root = createRoot(div)
-
-  act(() => {
-    root.render(component)
-  })
-
-  return div
-}
 
 describe('react', () => {
   describe('useNewCache', () => {
@@ -34,21 +23,21 @@ describe('react', () => {
         )
       }
 
-      const test = render(<Test />)
+      const { container } = render(<Test />)
 
-      expect(test.innerHTML).toBe('Mike D.')
+      expect(container.innerHTML).toBe('Mike D.')
 
       act(() => {
         name.value = 'Morty'
       })
 
-      expect(test.innerHTML).toBe('Morty D.')
+      expect(container.innerHTML).toBe('Morty D.')
 
       act(() => {
         surname.value = 'Test'
       })
 
-      expect(test.innerHTML).toBe('Morty T.')
+      expect(container.innerHTML).toBe('Morty T.')
     })
 
     test('deps', () => {
@@ -79,31 +68,31 @@ describe('react', () => {
 
       const inputRef = createRef<HTMLInputElement>()
 
-      const test = render(<Parent inputRef={inputRef} />)
+      const { container } = render(<Parent inputRef={inputRef} />)
 
-      expect(test.innerHTML).toBe('Mike D. says Hello!<input>')
+      expect(container.innerHTML).toBe('Mike D. says Hello!<input>')
 
       act(() => {
         name.value = 'Morty'
       })
 
-      expect(test.innerHTML).toBe('Morty D. says Hello!<input>')
+      expect(container.innerHTML).toBe('Morty D. says Hello!<input>')
 
       act(() => {
         surname.value = 'Test'
       })
 
-      expect(test.innerHTML).toBe('Morty T. says Hello!<input>')
+      expect(container.innerHTML).toBe('Morty T. says Hello!<input>')
 
       fireEvent.input(inputRef.current, { target: { value: 'Buy 8)' } })
 
-      expect(test.innerHTML).toBe('Morty T. says Buy 8)<input>')
+      expect(container.innerHTML).toBe('Morty T. says Buy 8)<input>')
 
       act(() => {
         name.value = 'Rick'
       })
 
-      expect(test.innerHTML).toBe('Rick T. says Buy 8)<input>')
+      expect(container.innerHTML).toBe('Rick T. says Buy 8)<input>')
     })
   })
 
@@ -125,26 +114,26 @@ describe('react', () => {
         return show ? <div>Aside Menu</div> : null
       }
 
-      const test = render(
+      const { container } = render(
         <>
           <AsideMenuButton />
           <AsideMenu />
         </>,
       )
 
-      expect(test.innerHTML).toBe('<button></button>')
+      expect(container.innerHTML).toBe('<button></button>')
 
       act(() => {
-        test.querySelector('button').click()
+        container.querySelector('button').click()
       })
 
-      expect(test.innerHTML).toBe('<button></button><div>Aside Menu</div>')
+      expect(container.innerHTML).toBe('<button></button><div>Aside Menu</div>')
 
       act(() => {
-        test.querySelector('button').click()
+        container.querySelector('button').click()
       })
 
-      expect(test.innerHTML).toBe('<button></button>')
+      expect(container.innerHTML).toBe('<button></button>')
     })
   })
 })

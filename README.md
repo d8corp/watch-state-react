@@ -182,7 +182,7 @@ import { useSelector } from '@watch-state/react'
 
 const $basePrice = new State(100)
 
-function ProductCard ({ isMember }) {
+function ProductCard ({ isMember }: { isMember: boolean }) {
   const [quantity, setQuantity] = useState(1)
 
   const total = useSelector(() => {
@@ -209,7 +209,7 @@ import { useMemo } from 'react'
 
 const $items = new State(['apple', 'banana', 'cherry'])
 
-function PrefixedItems ({ prefix }) {
+function PrefixedItems ({ prefix }: { prefix: string }) {
   const items = useObservable($items)
 
   const prefixedItems = useMemo(() => {
@@ -424,6 +424,7 @@ Used internally by [useObservable](#useobservable) and [useSelector](#useselecto
 Creates a `Watch` instance that calls the provided callback on state changes.
 
 ```ts
+import { useSyncExternalStore } from 'react'
 import { subscribe } from '@watch-state/react'
 import { State } from 'watch-state'
 

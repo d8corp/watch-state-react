@@ -20,7 +20,7 @@
 ## Index
 
 <sup>**[ [Install](#install) ]**</sup>  
-<sup>**[ [Hooks](#hooks) ]** [useWatch](#usewatch) • [useNewState](#usenewstate) • [useNewCompute](#usenewcompute)</sup>  
+<sup>**[ [Hooks](#hooks) ]** [useObservable](#useobservable) • [useSelector](#useselector) • [useNewState](#usenewstate) • [useNewCompute](#usenewcompute)</sup>  
 <sup>**[ [Utils](#utils) ]** [subscribe](#subscribe)</sup>  
 <sup>**[ [Examples](#examples) ]** [Counter](#counter) • [Toggle](#toggle) • [Async](#async)</sup>  
 <sup>**[ [Links](#links) ]**</sup>  
@@ -46,10 +46,10 @@ yarn add @watch-state/react
 ## Hooks
 ###### [🏠︎](#index) / Hooks [↑](#install) [↓](#utils)
 
-<sup>[useWatch](#usewatch) • [useNewState](#usenewstate) • [useNewCompute](#usenewcompute)</sup>
+<sup>[useObservable](#useobservable) • [useSelector](#useselector) • [useNewState](#usenewstate) • [useNewCompute](#usenewcompute)</sup>
 
-### useWatch
-###### [🏠︎](#index) / [Hooks](#hooks) / useWatch [↓](#usenewstate)
+### useObservable
+###### [🏠︎](#index) / [Hooks](#hooks) / useObservable [↓](#useselector)
 
 **Subscribe React components to watch-state changes with automatic re-render optimization.**
 
@@ -57,11 +57,11 @@ Uses `useSyncExternalStore` for correct synchronization with React. Automaticall
 
 #### Watching Observables
 
-Pass a `State` instance (or any `Observable` subclass, such as `Compute`) to `useWatch()` to subscribe to its changes. The hook returns the current value and triggers a re-render whenever the observable is updated.
+Pass a `State` instance (or any `Observable` subclass, such as `Compute`) to `useObservable()` to subscribe to its changes. The hook returns the current value and triggers a re-render whenever the observable is updated.
 
 ```tsx
 import { State } from 'watch-state'
-import { useWatch } from '@watch-state/react'
+import { useObservable } from '@watch-state/react'
 
 const $count = new State(0)
 
@@ -70,119 +70,152 @@ const increase = () => {
 }
 
 const Button = () => {
-  const count = useWatch($count)
+  const count = useObservable($count)
 
   return <button onClick={increase}>{count}</button>
 }
 ```
 
-#### Computed Functions
+### useSelector
+###### [🏠︎](#index) / [Hooks](#hooks) / useSelector [↑](#useobservable) [↓](#usenewstate)
 
-You can pass a function to `useWatch()` to create a reactive selector. The function may be called multiple times during a single render, so it must be pure and simple. The component re-renders **only if the returned value changes** (compared with `Object.is`).
+You can pass a function to `useSelector()` to create a reactive selector that triggers re-renders only when the returned value changes. (compared with `Object.is`).
+
+The function may be called multiple times during a single render, so it must be pure and simple.
+
+Uses `useSyncExternalStore` for correct synchronization with React.
+
+#### Basic Usage
 
 This is ideal for lightweight, pure selections — e.g. extracting a field.
 
 ```tsx
-const $user = new State({ name: 'Mike', age: 30 })
+import { State } from 'watch-state'
+import { useSelector } from '@watch-state/react'
+
+const $user = new State({ name: 'Mike', age: 42 })
 
 const UserName = () => {
-  const name = useWatch(() => $user.value.name)
+  const name = useSelector(() => $user.value.name)
 
   return <div>Hello, {name}!</div>
 }
 ```
 
-You can also combine multiple observables in one selector — the result updates reactively when any dependency changes.
+#### Combining Multiple Observables
+
+You can combine multiple observables in one selector — the result updates reactively when any dependency changes.
 
 ```tsx
+import { State } from 'watch-state'
+import { useSelector } from '@watch-state/react'
+
 const $price = new State(100)
 const $quantity = new State(2)
 
 const Total = () => {
-  const total = useWatch(() => $price.value * $quantity.value)
+  const total = useSelector(() => $price.value * $quantity.value)
 
   return <div>Total: ${total}</div>
 }
 ```
 
-#### Combining with React State or Props
-
-You can combine `useWatch()` with React's `useState` or props to react to both watch-state changes and local/component state:
+Use `Compute` for complex computations or when returning new objects/arrays to avoid unnecessary recalculations or re-renders.
 
 ```tsx
-const $price = new State(100)
+import { Compute, State } from 'watch-state'
+import { useObservable } from '@watch-state/react'
 
-const CartItem = ({ discountRate }) => {
-  const [quantity, setQuantity] = useState(0)
+const $products = new State(['apple', 'banana', 'cherry'])
 
-  const total = useWatch(() => {
-    const subtotal = $price.value * quantity
-    const discount = quantity > 10 ? subtotal * discountRate : 0
+const $list = new Compute(() => {
+  return $products.value.map(product => product.toUpperCase())
+})
 
-    return subtotal - discount
+const Total = () => {
+  const list = useObservable($list)
+
+  return (
+    <ul>
+      {list.map((value, index) => (
+        <li key={index}>{value}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+#### Combining with React State or Props
+
+You can combine `useSelector()` with React's `useState` or props to react to both watch-state changes and local/component state.
+
+```tsx
+import { State } from 'watch-state'
+import { useSelector, useState } from 'react'
+
+const $basePrice = new State(100)
+
+const ProductCard = ({ isMember }) => {
+  const [quantity, setQuantity] = useState(1)
+  
+  const total = useSelector(() => {
+    return $basePrice.value * quantity * (isMember ? 0.9 : 1)
   })
 
   return (
     <div>
-      <p>Price: ${price} × Quantity: {quantity} = ${total}</p>
-      {quantity > 10 && <p>Bulk discount applied!</p>}
-      <button onClick={() => setQuantity(q => q - 1)}>-</button>
+      <p>Total: ${total}</p>
       <button onClick={() => setQuantity(q => q + 1)}>+</button>
     </div>
   )
 }
 ```
 
-This pattern is useful when you need to track both global state (via `useWatch`) and local component state (via `useState` or props).
+This pattern is useful when you need to track both global state (via `useObservable`) and local component state (via `useState` or props).
 
-In most cases, it's better to wrap the computation in `useMemo` to prevent unnecessary recalculations, especially when the computation is expensive.
+#### Optimizing Expensive Computations with `useMemo`
+
+For expensive computations (like array operations) or when returning new objects/arrays, use `useMemo` to avoid unnecessary recalculations.
 
 ```tsx
-const $price = new State(100)
+import { State } from 'watch-state'
+import { useObservable } from '@watch-state/react'
+import { useMemo } from 'react'
 
-const CartItem = ({ discountRate }) => {
-  const [quantity, setQuantity] = useState(0)
-  const price = useWatch($price)
+const $items = new State(['apple', 'banana', 'cherry'])
 
-  const total = useMemo(() => {
-    const subtotal = price * quantity
-    const discount = quantity > 10 ? subtotal * discountRate : 0
+const PrefixedItems = ({ prefix }) => {
+  const items = useObservable($items)
 
-    return subtotal - discount
-  }, [price, quantity, discountRate])
+  const prefixedItems = useMemo(() => {
+    return items.map(item => `${prefix} - ${item}`)
+  }, [items, prefix])
 
-  return (
-    <div>
-      <p>Price: ${price} × Quantity: {quantity} = ${total}</p>
-      {quantity > 10 && <p>Bulk discount applied!</p>}
-      <button onClick={() => setQuantity(q => q - 1)}>-</button>
-      <button onClick={() => setQuantity(q => q + 1)}>+</button>
-    </div>
-  )
+  return <div>{prefixedItems.join(', ')}</div>
 }
 ```
 
 ### useNewState
-###### [🏠︎](#index) / [Hooks](#hooks) / useNewState [↑](#usewatch) [↓](#usenewcompute)
+###### [🏠︎](#index) / [Hooks](#hooks) / useNewState [↑](#useobservable) [↓](#usenewcompute)
 
 **Create a State instance inside a React component — persists across re-renders.**
 
 ```tsx
-import { useWatch, useNewState } from '@watch-state/react'
+import { useObservable, useNewState } from '@watch-state/react'
 import { useEffect } from 'react'
 
 const Counter = () => {
-  const count = useNewState(0)
+  const $count = useNewState(0)
 
   useEffect(() => {
     const t = setInterval(() => {
-      count.value++
+      $count.value++
     }, 1000)
 
     return () => clearInterval(t)
   }, [])
 
-  const value = useWatch(count)
+  const value = useObservable($count)
 
   return <div>{value}</div>
 }
@@ -191,7 +224,7 @@ const Counter = () => {
 ### useNewCompute
 ###### [🏠︎](#index) / [Hooks](#hooks) / useNewCompute [↑](#usenewstate)
 
-Creates a reactive computed value that automatically updates when its dependencies change. The hook returns a `Compute` instance that can be watched using `useWatch`.
+Creates a reactive computed value that automatically updates when its dependencies change. The hook returns a `Compute` instance that can be watched using `useObservable`.
 
 **Parameters:**
 - `watcher` — A function that returns the computed value. This function can access reactive `State` or `Compute` instances.
@@ -208,7 +241,7 @@ Creates a reactive computed value that automatically updates when its dependenci
 
 ```tsx
 import { State } from 'watch-state'
-import { useWatch, useNewCompute } from '@watch-state/react'
+import { useObservable, useNewCompute } from '@watch-state/react'
 
 const $name = new State('Mike')
 const $surname = new State('Deight')
@@ -220,7 +253,7 @@ const Parent = () => {
 }
 
 const Child = ({ fullName }) => {
-  const value = useWatch(fullName)
+  const value = useObservable(fullName)
 
   return <div>{value}</div>
 }
@@ -230,7 +263,7 @@ const Child = ({ fullName }) => {
 
 ```tsx
 import { State } from 'watch-state'
-import { useWatch, useNewCompute } from '@watch-state/react'
+import { useObservable, useNewCompute } from '@watch-state/react'
 
 const $name = new State('Mike')
 
@@ -241,7 +274,7 @@ const Parent = ({ surname }) => {
 }
 
 const Child = ({ fullName }) => {
-  const value = useWatch(fullName)
+  const value = useObservable(fullName)
 
   return <div>{value}</div>
 }
@@ -257,7 +290,7 @@ const Child = ({ fullName }) => {
 
 **Stable subscription factory for `useSyncExternalStore` with watch-state.**
 
-Used internally by `useWatch`. Creates a `Watch` instance that calls the provided callback on state changes.
+Used internally by `useObservable`. Creates a `Watch` instance that calls the provided callback on state changes.
 
 ```ts
 import { subscribe } from '@watch-state/react'
@@ -265,7 +298,7 @@ import { State } from 'watch-state'
 
 const $state = new State(0)
 
-// Same as useWatch($state)
+// Same as useObservable($state)
 const value = useSyncExternalStore(subscribe, () => $state.value)
 ```
 
@@ -279,7 +312,7 @@ const value = useSyncExternalStore(subscribe, () => $state.value)
 
 ```tsx
 import { State } from 'watch-state'
-import { useWatch } from '@watch-state/react'
+import { useObservable } from '@watch-state/react'
 
 const $count = new State(0)
 
@@ -288,7 +321,7 @@ const increase = () => {
 }
 
 export function CountButton () {
-  const count = useWatch($count)
+  const count = useObservable($count)
 
   return <button onClick={increase}>{count}</button>
 }
@@ -299,7 +332,7 @@ export function CountButton () {
 
 ```tsx
 import { State } from 'watch-state'
-import { useWatch } from '@watch-state/react'
+import { useObservable } from '@watch-state/react'
 
 const $show = new State(false)
 
@@ -312,7 +345,7 @@ const AsideMenuButton = () => {
 }
 
 const AsideMenu = () => {
-  const show = useWatch($show)
+  const show = useObservable($show)
 
   return show ? <div>Aside Menu</div> : null
 }
@@ -322,19 +355,19 @@ const AsideMenu = () => {
 ###### [🏠︎](#index) / [Examples](#examples) / Async [↑](#toggle)
 
 ```tsx
-import { useWatch } from '@watch-state/react'
+import { useObservable, useSelector } from '@watch-state/react'
 import Async from '@watch-state/async'
 
-const api = new Async(
+const $api = new Async(
   () => fetch('/api/test')
     .then(r => r.json())
 )
 
 const User = () => {
-  const value = useWatch(api)
-  const loading = useWatch(() => api.loading)
-  const loaded = useWatch(() => api.loaded)
-  const error = useWatch(() => api.error)
+  const value = useObservable($api)
+  const loading = useSelector(() => $api.loading)
+  const loaded = useSelector(() => $api.loaded)
+  const error = useSelector(() => $api.error)
 
   if (error) {
     return <div>Error!</div>

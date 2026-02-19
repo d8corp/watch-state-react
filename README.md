@@ -56,7 +56,7 @@ Uses `useSyncExternalStore` for correct synchronization with React. Automaticall
 
 #### Watching Observables
 
-Pass a `State` instance (or any `Observable` subclass, such as `Compute`) to `useObservable()` to subscribe to its changes. The hook returns the current value and triggers a re-render whenever the observable is updated.
+Pass a `State` instance (or any `Observable` subclass, such as `Compute`) to `useObservable()` to subscribe to its changes. The hook returns the current value and triggers a re-render whenever the observable value is changed.
 
 ```tsx
 import { State } from 'watch-state'
@@ -72,6 +72,28 @@ const Button = () => {
   const count = useObservable($count)
 
   return <button onClick={increase}>{count}</button>
+}
+```
+
+The next example demonstrates batching multiple state updates into one reactive event with `createEvent`. Clicking the button increments `$a` and `$b` atomically; the computed `$sum` then updates reactively without intermediate renders since all changes occur in a single update cycle.
+
+```tsx
+import { State, Compute, createEvent } from 'watch-state'
+import { useObservable } from '@watch-state/react'
+
+const $a = new State(1)
+const $b = new State(2)
+const $sum = new Compute(() => $a.value + $b.value)
+
+const increase = createEvent(() => {
+  $a.value++
+  $b.value++
+})
+
+const Button = () => {
+  const sum = useObservable($sum)
+
+  return <button onClick={increase}>{sum}</button>
 }
 ```
 

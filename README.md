@@ -68,7 +68,7 @@ const increase = () => {
   $count.value++
 }
 
-const Button = () => {
+function Button () {
   const count = useObservable($count)
 
   return <button onClick={increase}>{count}</button>
@@ -91,7 +91,7 @@ const increase = createEvent(() => {
   $b.value++
 })
 
-const Button = () => {
+function Button () {
   const sum = useObservable($sum)
 
   return <button onClick={increase}>{sum}</button>
@@ -117,7 +117,7 @@ import { useSelector } from '@watch-state/react'
 
 const $user = new State({ name: 'Mike', age: 42 })
 
-const UserName = () => {
+function UserName () {
   const name = useSelector(() => $user.value.name)
 
   return <div>Hello, {name}!</div>
@@ -135,7 +135,7 @@ import { useSelector } from '@watch-state/react'
 const $price = new State(100)
 const $quantity = new State(2)
 
-const Total = () => {
+function Total () {
   const total = useSelector(() => $price.value * $quantity.value)
 
   return <div>Total: ${total}</div>
@@ -154,7 +154,7 @@ const $list = new Compute(() => {
   return $products.value.map(product => product.toUpperCase())
 })
 
-const Total = () => {
+function Total () {
   const list = useObservable($list)
 
   return (
@@ -178,9 +178,9 @@ import { useSelector } from '@watch-state/react'
 
 const $basePrice = new State(100)
 
-const ProductCard = ({ isMember }) => {
+function ProductCard ({ isMember }) {
   const [quantity, setQuantity] = useState(1)
-  
+
   const total = useSelector(() => {
     return $basePrice.value * quantity * (isMember ? 0.9 : 1)
   })
@@ -207,7 +207,7 @@ import { useMemo } from 'react'
 
 const $items = new State(['apple', 'banana', 'cherry'])
 
-const PrefixedItems = ({ prefix }) => {
+function PrefixedItems ({ prefix }) {
   const items = useObservable($items)
 
   const prefixedItems = useMemo(() => {
@@ -302,7 +302,7 @@ This pattern is useful when you need to share state across multiple levels of co
 ```tsx
 import { useObservable, useNewCompute, useNewState } from '@watch-state/react'
 
-const Parent = () => {
+function Parent () {
   const $name = useNewState('Foo')
   const $surname = useNewState('Bar')
 
@@ -342,13 +342,13 @@ import { useObservable, useNewCompute } from '@watch-state/react'
 const $name = new State('Mike')
 const $surname = new State('Deight')
 
-const Parent = () => {
+function Parent () {
   const fullName = useNewCompute(() => `${$name.value} ${$surname.value[0]}.`)
 
   return <Child fullName={fullName} />
 }
 
-const Child = ({ fullName }) => {
+function Child ({ fullName }) {
   const value = useObservable(fullName)
 
   return <div>{value}</div>
@@ -363,13 +363,13 @@ import { useObservable, useNewCompute } from '@watch-state/react'
 
 const $name = new State('Mike')
 
-const Parent = ({ surname }) => {
+function Parent ({ surname }) {
   const fullName = useNewCompute(() => `${$name.value} ${surname[0]}.`, [surname])
 
   return <Child fullName={fullName} />
 }
 
-const Child = ({ fullName }) => {
+function Child ({ fullName }) {
   const value = useObservable(fullName)
 
   return <div>{value}</div>
@@ -433,7 +433,7 @@ import { useObservable } from '@watch-state/react'
 
 const $show = new State(false)
 
-const AsideMenuButton = () => {
+function AsideMenuButton () {
   const toggle = () => {
     $show.value = !$show.value
   }
@@ -441,7 +441,7 @@ const AsideMenuButton = () => {
   return <button onClick={toggle} />
 }
 
-const AsideMenu = () => {
+function AsideMenu () {
   const show = useObservable($show)
 
   return show ? <div>Aside Menu</div> : null
@@ -460,7 +460,7 @@ const $api = new Async(
     .then(r => r.json())
 )
 
-const User = () => {
+function User () {
   const value = useObservable($api)
   const loading = useSelector(() => $api.loading)
   const loaded = useSelector(() => $api.loaded)

@@ -172,7 +172,7 @@ function Total () {
 
 #### Combining with React State or Props
 
-You can combine `useSelector()` with React's `useState` or props to react to both watch-state changes and local/component state.
+You can combine `useSelector()` with React's `useState` or props to react to both watch-state changes and component state.
 
 ```tsx
 import { useState } from 'react'
@@ -319,20 +319,9 @@ function Parent () {
 }
 ```
 
-> When the button is clicked, the component will *not* re-render even though `$surname` changed, because the computed value `$fullName` remains the same ("Foo B." before and after the change). This demonstrates the automatic optimization of `useNewCompute` - components only re-render when the computed value actually changes.
+When the button is clicked, the component will *not* re-render even though `$surname` changed, because the computed value `$fullName` remains the same ("Foo B." before and after the change). This demonstrates the automatic optimization of `useNewCompute` - components only re-render when the computed value actually changes.
 
-**Parameters:**
-- `watcher` — A function that returns the computed value. This function can access reactive `State` or `Compute` instances.
-- `deps` (optional) — A dependency array that triggers recomputation when values change. Use this for props or external values that should trigger an update.
-
-**Returns:**
-- A `Compute` instance with the computed value.
-
-**Behavior:**
-- Automatically tracks reactive dependencies (State/Compute instances) accessed within the watcher function
-- Supports manual dependency array for prop-based recomputation
-- Cleans up automatically when the component unmounts
-- Maintains computation result across re-renders
+#### Using Props for Compute Sharing 
 
 ```tsx
 import { Observable, State } from 'watch-state'
@@ -354,7 +343,7 @@ function Child ({ $fullName }: { $fullName: Observable<string> }) {
 }
 ```
 
-**With dependency array for prop-based recomputation:**
+#### Using dependency array for component state
 
 ```tsx
 import { Observable, State } from 'watch-state'
@@ -363,7 +352,9 @@ import { useObservable, useNewCompute } from '@watch-state/react'
 const $name = new State('Mike')
 
 function Parent ({ surname }: { surname: string }) {
-  const $fullName = useNewCompute(() => `${$name.value} ${surname[0]}.`, [surname])
+  const $fullName = useNewCompute(() => (
+    `${$name.value} ${surname[0]}.`
+  ), [surname])
 
   return <Child $fullName={$fullName} />
 }
@@ -373,6 +364,12 @@ function Child ({ $fullName }: { $fullName: Observable<string> }) {
 
   return <div>{fullName}</div>
 }
+```
+
+#### Using Context for Compute Sharing
+
+```tsx
+
 ```
 
 ## Utils

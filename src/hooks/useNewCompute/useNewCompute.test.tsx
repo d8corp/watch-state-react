@@ -5,7 +5,8 @@ import React, { act } from 'react'
 import type { Observable } from 'watch-state'
 import { State } from 'watch-state'
 
-import { useWatch } from '../useWatch'
+import { useNewState } from '../useNewState'
+import { useObservable } from '../useObservable'
 import { useNewCompute } from './useNewCompute'
 
 describe('useNewCompute', () => {
@@ -27,7 +28,7 @@ describe('useNewCompute', () => {
     }
 
     function Child ({ $name }: { $name: Observable<string> }) {
-      const name = useWatch($name)
+      const name = useObservable($name)
 
       return <div>{name}</div>
     }
@@ -42,6 +43,38 @@ describe('useNewCompute', () => {
     })
 
     expect(container.innerHTML).toBe('<div>Baz B.</div>')
+    expect(renderCount).toBe(1)
+  })
+
+  it('should not re-render when computed value remains the same despite dependency changes', () => {
+    let renderCount = 0
+
+    function Parent () {
+      const $name = useNewState('Foo')
+      const $surname = useNewState('Bar')
+      const $fullName = useNewCompute(() => `${$name.value} ${$surname.value[0]}.`)
+
+      const fullName = useObservable($fullName)
+
+      const handleClick = () => {
+        $surname.value = 'Baz'
+      }
+
+      renderCount++
+
+      return <button onClick={handleClick}>{fullName}</button>
+    }
+
+    const { container } = render(<Parent />)
+
+    expect(container.innerHTML).toBe('<button>Foo B.</button>')
+    expect(renderCount).toBe(1)
+
+    act(() => {
+      container.querySelector('button')?.click()
+    })
+
+    expect(container.innerHTML).toBe('<button>Foo B.</button>')
     expect(renderCount).toBe(1)
   })
 
@@ -86,7 +119,7 @@ describe('useNewCompute', () => {
     })
 
     function Child ({ $filteredProducts }: { $filteredProducts: Observable<Product[]> }) {
-      const filteredProducts = useWatch($filteredProducts)
+      const filteredProducts = useObservable($filteredProducts)
 
       return (
         <ul>

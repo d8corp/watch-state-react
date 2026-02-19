@@ -232,10 +232,13 @@ import { useObservable, useNewCompute, useNewState } from '@watch-state/react'
 const Parent = () => {
   const $name = useNewState('Foo')
   const $surname = useNewState('Bar')
-  const $fullName = useNewCompute(() => `${$name.value} ${$surname.value[0]}.`)
+
+  const $fullName = useNewCompute(() => (
+    `${$name.value} ${$surname.value[0]}.`
+  ))
 
   const fullName = useObservable($fullName)
-  
+
   const handleClick = () => {
     $surname.value = 'Baz'
   }
@@ -243,6 +246,8 @@ const Parent = () => {
   return <button onClick={handleClick}>{fullName}</button>
 }
 ```
+
+> When the button is clicked, the component will *not* re-render even though `$surname` changed, because the computed value `$fullName` remains the same ("Foo B." before and after the change). This demonstrates the automatic optimization of `useNewCompute` - components only re-render when the computed value actually changes.
 
 **Parameters:**
 - `watcher` — A function that returns the computed value. This function can access reactive `State` or `Compute` instances.

@@ -197,8 +197,6 @@ function ProductCard ({ isMember }) {
 }
 ```
 
-This pattern is useful when you need to track both global state and local component state.
-
 #### Optimizing Expensive Computations with `useMemo`
 
 For expensive computations or when returning new objects/arrays, use `useMemo` to avoid unnecessary recalculations.

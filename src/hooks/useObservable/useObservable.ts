@@ -1,7 +1,6 @@
-import { useSyncExternalStore } from 'react'
 import type { Observable } from 'watch-state'
 
-import { subscribe } from '../../utils'
+import { useSelector } from '../useSelector'
 
 /**
  * React hook to subscribe a component to changes in a **watch-state** `Observable`.
@@ -32,8 +31,5 @@ import { subscribe } from '../../utils'
  * @template T The type of the state value
  */
 export function useObservable<T> (state: Observable<T>): T {
-  return useSyncExternalStore(
-    subscribe,
-    () => state.value,
-  )
+  return useSelector(() => state.value)
 }

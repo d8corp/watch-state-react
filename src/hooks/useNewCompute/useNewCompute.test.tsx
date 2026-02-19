@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom'
 
 import { render } from '@testing-library/react'
-import React, { act } from 'react'
+import React, { act, createContext, useContext } from 'react'
 import type { Observable } from 'watch-state'
 import { State } from 'watch-state'
 
@@ -164,5 +164,91 @@ describe('useNewCompute', () => {
     expect(container.innerHTML).toContain('Apple - $10')
     expect(container.innerHTML).toContain('Cherry - $15')
     expect(renderCount).toBe(1)
+  })
+
+  it('should update when props change via dependency array', () => {
+    const $name = new State('Mike')
+
+    function Parent ({ surname }: { surname: string }) {
+      const $fullName = useNewCompute(() => (
+        `${$name.value} ${surname[0]}.`
+      ), [surname])
+
+      return <Child $fullName={$fullName} />
+    }
+
+    function Child ({ $fullName }: { $fullName: Observable<string> }) {
+      const fullName = useObservable($fullName)
+
+      return <div>{fullName}</div>
+    }
+
+    const { container, rerender } = render(<Parent surname='Deight' />)
+
+    expect(container.innerHTML).toBe('<div>Mike D.</div>')
+
+    rerender(<Parent surname='Smith' />)
+
+    expect(container.innerHTML).toBe('<div>Mike S.</div>')
+
+    act(() => {
+      $name.value = 'John'
+    })
+
+    expect(container.innerHTML).toBe('<div>John S.</div>')
+  })
+
+  it('should share computed value via context without prop drilling', () => {
+    const $name = new State('Mike')
+    const $surname = new State('Deight')
+
+    const FullNameContext = createContext<Observable<string> | undefined>(undefined)
+
+    const useFullName = () => {
+      const $fullName = useContext(FullNameContext)
+
+      if (!$fullName) throw new Error('FullNameContext must be provided')
+
+      return useObservable($fullName)
+    }
+
+    let parentRenderCount = 0
+
+    function Parent () {
+      const $fullName = useNewCompute(() => `${$name.value} ${$surname.value[0]}.`)
+
+      parentRenderCount++
+
+      return (
+        <FullNameContext.Provider value={$fullName}>
+          <Child />
+        </FullNameContext.Provider>
+      )
+    }
+
+    function Child () {
+      const fullName = useFullName()
+
+      return <div>{fullName}</div>
+    }
+
+    const { container } = render(<Parent />)
+
+    expect(container.innerHTML).toBe('<div>Mike D.</div>')
+    expect(parentRenderCount).toBe(1)
+
+    act(() => {
+      $name.value = 'John'
+    })
+
+    expect(container.innerHTML).toBe('<div>John D.</div>')
+    expect(parentRenderCount).toBe(1)
+
+    act(() => {
+      $surname.value = 'Smith'
+    })
+
+    expect(container.innerHTML).toBe('<div>John S.</div>')
+    expect(parentRenderCount).toBe(1)
   })
 })

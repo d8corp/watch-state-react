@@ -2,7 +2,7 @@ import '@testing-library/jest-dom'
 
 import { fireEvent, render, screen } from '@testing-library/react'
 import React from 'react'
-import { Compute, State } from 'watch-state'
+import { Compute, createEvent, State } from 'watch-state'
 
 import { useObservable } from '.'
 
@@ -64,5 +64,41 @@ describe('useObservable', () => {
     expect(surname.value).toBe('Baz')
     expect(screen.queryByText('Foo B.')).toBeInTheDocument()
     expect(isRendered).toBe(false)
+  })
+
+  test('batching', () => {
+    const $a = new State(1)
+    const $b = new State(2)
+    const $sum = new Compute(() => $a.value + $b.value)
+
+    let renderCount = 0
+
+    const increase = createEvent(() => {
+      $a.value++
+      $b.value++
+    })
+
+    const Button = () => {
+      const sum = useObservable($sum)
+
+      renderCount++
+
+      return <button onClick={increase}>{sum}</button>
+    }
+
+    render(<Button />)
+
+    expect(screen.queryByText('3')).toBeInTheDocument()
+    expect(renderCount).toBe(1)
+
+    fireEvent.click(screen.queryByText('3'))
+
+    expect(screen.queryByText('5')).toBeInTheDocument()
+    expect(renderCount).toBe(2)
+
+    fireEvent.click(screen.queryByText('5'))
+
+    expect(screen.queryByText('7')).toBeInTheDocument()
+    expect(renderCount).toBe(3)
   })
 })

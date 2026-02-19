@@ -8,11 +8,14 @@
 
 [![NPM](https://img.shields.io/npm/v/@watch-state/react.svg)](https://www.npmjs.com/package/@watch-state/react)
 [![downloads](https://img.shields.io/npm/dm/@watch-state/react.svg)](https://www.npmtrends.com/@watch-state/react)
+[![types](https://img.shields.io/npm/types/@watch-state/react)](https://www.typescriptlang.org)
 [![changelog](https://img.shields.io/badge/Changelog-⋮-brightgreen)](https://changelogs.xyz/@watch-state/react)
 [![license](https://img.shields.io/npm/l/@watch-state/react)](https://github.com/d8corp/watch-state-react/blob/master/LICENSE)
 [![tests](https://github.com/d8corp/watch-state-react/actions/workflows/tests.yml/badge.svg)](https://d8corp.github.io/watch-state-react/coverage/lcov-report/)
 
 `@watch-state/react` provides **[React](https://www.npmjs.com/package/react) hooks for [watch-state](https://www.npmjs.com/package/watch-state)** — a lightweight, high-performance reactive state engine.
+
+Written in TypeScript and provides full type definitions out of the box.
 
 [![stars](https://img.shields.io/github/stars/d8corp/watch-state-react?style=social)](https://github.com/d8corp/watch-state-react/stargazers)
 [![watchers](https://img.shields.io/github/watchers/d8corp/watch-state-react?style=social)](https://github.com/d8corp/watch-state-react/watchers)
@@ -22,7 +25,7 @@
 <sup>**[ [Install](#install) ]**</sup>  
 <sup>**[ [Hooks](#hooks) ]** [useObservable](#useobservable) • [useSelector](#useselector) • [useNewState](#usenewstate) • [useNewCompute](#usenewcompute)</sup>  
 <sup>**[ [Utils](#utils) ]** [subscribe](#subscribe)</sup>  
-<sup>**[ [Examples](#examples) ]** [Counter](#counter) • [Toggle](#toggle) • [Async](#async)</sup>  
+<sup>**[ [Examples](#examples) ]** [Toggle](#toggle) • [Todo List](#todo-list) • [Async](#async)</sup>  
 <sup>**[ [Links](#links) ]**</sup>  
 <sup>**[ [Issues](#issues) ]**</sup>
 

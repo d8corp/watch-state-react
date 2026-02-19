@@ -107,7 +107,7 @@ The function may be called multiple times during a single render, so it must be 
 
 Uses `useSyncExternalStore` for correct synchronization with React.
 
-#### Selection fields
+#### Extracting fields
 
 This is ideal for lightweight, pure selections — e.g. extracting a field.
 

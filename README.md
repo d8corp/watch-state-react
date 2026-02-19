@@ -33,14 +33,13 @@
 
 Use with any modern bundler (Vite, Webpack, Rollup, etc.) or framework (Next.js, Remix, etc.).
 
-npm
 ```shell
 npm i @watch-state/react
 ```
 
-yarn
+With [watch-state](https://www.npmjs.com/package/watch-state)
 ```shell
-yarn add @watch-state/react
+npm i watch-state @watch-state/react
 ```
 
 ## Hooks
@@ -150,8 +149,9 @@ const Total = () => {
 You can combine `useSelector()` with React's `useState` or props to react to both watch-state changes and local/component state.
 
 ```tsx
+import { useState } from 'react'
 import { State } from 'watch-state'
-import { useSelector, useState } from 'react'
+import { useSelector } from '@watch-state/react'
 
 const $basePrice = new State(100)
 
@@ -198,7 +198,7 @@ const PrefixedItems = ({ prefix }) => {
 ### useNewState
 ###### [🏠︎](#index) / [Hooks](#hooks) / useNewState [↑](#useobservable) [↓](#usenewcompute)
 
-**Create a State instance inside a React component — persists across re-renders.**
+**Create a `State` instance inside a React component (persists across re-renders)** that can be watched using `useObservable`.
 
 ```tsx
 import { useObservable, useNewState } from '@watch-state/react'
@@ -224,7 +224,25 @@ const Counter = () => {
 ### useNewCompute
 ###### [🏠︎](#index) / [Hooks](#hooks) / useNewCompute [↑](#usenewstate)
 
-Creates a reactive computed value that automatically updates when its dependencies change. The hook returns a `Compute` instance that can be watched using `useObservable`.
+**Create a `Compute` instance inside a React component (persists across re-renders)** that can be watched using `useObservable`.
+
+```tsx
+import { useObservable, useNewCompute, useNewState } from '@watch-state/react'
+
+const Parent = () => {
+  const $name = useNewState('Foo')
+  const $surname = useNewState('Bar')
+  const $fullName = useNewCompute(() => `${$name.value} ${$surname.value[0]}.`)
+
+  const fullName = useObservable($fullName)
+  
+  const handleClick = () => {
+    $surname.value = 'Baz'
+  }
+
+  return <button onClick={handleClick}>{fullName}</button>
+}
+```
 
 **Parameters:**
 - `watcher` — A function that returns the computed value. This function can access reactive `State` or `Compute` instances.
@@ -290,7 +308,8 @@ const Child = ({ fullName }) => {
 
 **Stable subscription factory for `useSyncExternalStore` with watch-state.**
 
-Used internally by `useObservable`. Creates a `Watch` instance that calls the provided callback on state changes.
+Used internally by [useObservable](#useobservable) and [useSelector](#useselector).
+Creates a `Watch` instance that calls the provided callback on state changes.
 
 ```ts
 import { subscribe } from '@watch-state/react'
@@ -298,8 +317,8 @@ import { State } from 'watch-state'
 
 const $state = new State(0)
 
-// Same as useObservable($state)
 const value = useSyncExternalStore(subscribe, () => $state.value)
+// Same as useObservable($state)
 ```
 
 ## Examples

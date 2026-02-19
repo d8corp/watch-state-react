@@ -1,56 +1,160 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1610794938081" clover="3.2.0">
-  <project timestamp="1610794938081" name="All files">
-    <metrics statements="47" coveredstatements="47" conditionals="28" coveredconditionals="26" methods="9" coveredmethods="9" elements="84" coveredelements="82" complexity="0" loc="47" ncloc="47" packages="1" files="1" classes="1"/>
-    <file name="index.ts" path="/Users/mihaillysikov/deight/watch-state-react/src/index.ts">
-      <metrics statements="47" coveredstatements="47" conditionals="28" coveredconditionals="26" methods="9" coveredmethods="9"/>
-      <line num="1" count="1" type="stmt"/>
-      <line num="2" count="1" type="stmt"/>
-      <line num="3" count="1" type="stmt"/>
-      <line num="5" count="1" type="stmt"/>
-      <line num="6" count="1" type="stmt"/>
-      <line num="11" count="13" type="cond" truecount="4" falsecount="0"/>
-      <line num="12" count="13" type="cond" truecount="2" falsecount="0"/>
-      <line num="13" count="11" type="stmt"/>
-      <line num="14" count="11" type="stmt"/>
-      <line num="15" count="4" type="stmt"/>
-      <line num="16" count="4" type="stmt"/>
-      <line num="17" count="4" type="stmt"/>
-      <line num="18" count="4" type="cond" truecount="1" falsecount="1"/>
-      <line num="19" count="4" type="stmt"/>
-      <line num="20" count="2" type="stmt"/>
-      <line num="21" count="2" type="cond" truecount="3" falsecount="1"/>
-      <line num="22" count="2" type="stmt"/>
-      <line num="26" count="4" type="cond" truecount="4" falsecount="0"/>
-      <line num="28" count="20" type="stmt"/>
-      <line num="29" count="20" type="stmt"/>
-      <line num="30" count="20" type="cond" truecount="2" falsecount="0"/>
-      <line num="31" count="8" type="stmt"/>
-      <line num="33" count="12" type="cond" truecount="4" falsecount="0"/>
-      <line num="34" count="12" type="stmt"/>
-      <line num="36" count="12" type="stmt"/>
-      <line num="37" count="21" type="cond" truecount="2" falsecount="0"/>
-      <line num="38" count="12" type="stmt"/>
-      <line num="39" count="9" type="cond" truecount="2" falsecount="0"/>
-      <line num="40" count="8" type="stmt"/>
-      <line num="41" count="8" type="stmt"/>
-      <line num="42" count="8" type="stmt"/>
-      <line num="47" count="20" type="stmt"/>
-      <line num="49" count="11" type="stmt"/>
-      <line num="51" count="6" type="stmt"/>
-      <line num="52" count="6" type="stmt"/>
-      <line num="53" count="6" type="stmt"/>
-      <line num="55" count="6" type="stmt"/>
-      <line num="56" count="10" type="cond" truecount="2" falsecount="0"/>
-      <line num="57" count="4" type="stmt"/>
-      <line num="59" count="6" type="stmt"/>
-      <line num="62" count="6" type="stmt"/>
-      <line num="63" count="4" type="stmt"/>
-      <line num="64" count="4" type="stmt"/>
-      <line num="66" count="6" type="stmt"/>
-      <line num="71" count="1" type="stmt"/>
-      <line num="72" count="1" type="stmt"/>
-      <line num="73" count="1" type="stmt"/>
-    </file>
+<coverage generated="1771540181552" clover="3.2.0">
+  <project timestamp="1771540181552" name="All files">
+    <metrics statements="64" coveredstatements="55" conditionals="12" coveredconditionals="8" methods="18" coveredmethods="11" elements="94" coveredelements="74" complexity="0" loc="64" ncloc="64" packages="11" files="19" classes="19"/>
+    <package name="src">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="index.ts" path="/Users/deight/cantinc/watch-state-react/src/index.ts">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.hooks">
+      <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="index.ts" path="/Users/deight/cantinc/watch-state-react/src/hooks/index.ts">
+        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.hooks.useNewCache">
+      <metrics statements="4" coveredstatements="3" conditionals="2" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <file name="index.ts" path="/Users/deight/cantinc/watch-state-react/src/hooks/useNewCache/index.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+      </file>
+      <file name="useNewCache.ts" path="/Users/deight/cantinc/watch-state-react/src/hooks/useNewCache/useNewCache.ts">
+        <metrics statements="3" coveredstatements="2" conditionals="2" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="7" count="1" type="cond" truecount="0" falsecount="2"/>
+        <line num="8" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.hooks.useNewCompute">
+      <metrics statements="15" coveredstatements="15" conditionals="6" coveredconditionals="6" methods="5" coveredmethods="5"/>
+      <file name="index.ts" path="/Users/deight/cantinc/watch-state-react/src/hooks/useNewCompute/index.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+      </file>
+      <file name="useNewCompute.ts" path="/Users/deight/cantinc/watch-state-react/src/hooks/useNewCompute/useNewCompute.ts">
+        <metrics statements="14" coveredstatements="14" conditionals="6" coveredconditionals="6" methods="5" coveredmethods="5"/>
+        <line num="1" count="2" type="stmt"/>
+        <line num="3" count="2" type="stmt"/>
+        <line num="64" count="2" type="stmt"/>
+        <line num="65" count="9" type="stmt"/>
+        <line num="66" count="9" type="stmt"/>
+        <line num="67" count="9" type="stmt"/>
+        <line num="69" count="9" type="stmt"/>
+        <line num="71" count="9" type="stmt"/>
+        <line num="72" count="9" type="cond" truecount="4" falsecount="0"/>
+        <line num="73" count="4" type="stmt"/>
+        <line num="77" count="9" type="stmt"/>
+        <line num="78" count="5" type="stmt"/>
+        <line num="80" count="5" type="stmt"/>
+        <line num="83" count="14" type="cond" truecount="2" falsecount="0"/>
+      </file>
+    </package>
+    <package name="src.hooks.useNewState">
+      <metrics statements="6" coveredstatements="6" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+      <file name="index.ts" path="/Users/deight/cantinc/watch-state-react/src/hooks/useNewState/index.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="2" type="stmt"/>
+      </file>
+      <file name="useNewState.ts" path="/Users/deight/cantinc/watch-state-react/src/hooks/useNewState/useNewState.ts">
+        <metrics statements="5" coveredstatements="5" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+        <line num="1" count="3" type="stmt"/>
+        <line num="2" count="3" type="stmt"/>
+        <line num="37" count="3" type="stmt"/>
+        <line num="38" count="4" type="stmt"/>
+        <line num="40" count="4" type="cond" truecount="2" falsecount="0"/>
+      </file>
+    </package>
+    <package name="src.hooks.useObservable">
+      <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+      <file name="index.ts" path="/Users/deight/cantinc/watch-state-react/src/hooks/useObservable/index.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="5" type="stmt"/>
+      </file>
+      <file name="useObservable.ts" path="/Users/deight/cantinc/watch-state-react/src/hooks/useObservable/useObservable.ts">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="33" count="5" type="stmt"/>
+        <line num="34" count="138" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.hooks.useSelector">
+      <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="index.ts" path="/Users/deight/cantinc/watch-state-react/src/hooks/useSelector/index.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="5" type="stmt"/>
+      </file>
+      <file name="useSelector.ts" path="/Users/deight/cantinc/watch-state-react/src/hooks/useSelector/useSelector.ts">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="41" count="5" type="stmt"/>
+        <line num="42" count="44" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.hooks.useWatch">
+      <metrics statements="4" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <file name="index.ts" path="/Users/deight/cantinc/watch-state-react/src/hooks/useWatch/index.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+      </file>
+      <file name="useWatch.ts" path="/Users/deight/cantinc/watch-state-react/src/hooks/useWatch/useWatch.ts">
+        <metrics statements="3" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.hooks.useWatcher">
+      <metrics statements="11" coveredstatements="4" conditionals="2" coveredconditionals="0" methods="5" coveredmethods="0"/>
+      <file name="index.ts" path="/Users/deight/cantinc/watch-state-react/src/hooks/useWatcher/index.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+      </file>
+      <file name="useWatcher.ts" path="/Users/deight/cantinc/watch-state-react/src/hooks/useWatcher/useWatcher.ts">
+        <metrics statements="10" coveredstatements="3" conditionals="2" coveredconditionals="0" methods="5" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="9" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.utils">
+      <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="index.ts" path="/Users/deight/cantinc/watch-state-react/src/utils/index.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="5" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.utils.subscribe">
+      <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+      <file name="index.ts" path="/Users/deight/cantinc/watch-state-react/src/utils/subscribe/index.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="5" type="stmt"/>
+      </file>
+      <file name="subscribe.ts" path="/Users/deight/cantinc/watch-state-react/src/utils/subscribe/subscribe.ts">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="1" count="5" type="stmt"/>
+        <line num="22" count="5" type="stmt"/>
+        <line num="23" count="17" type="stmt"/>
+        <line num="25" count="17" type="stmt"/>
+      </file>
+    </package>
   </project>
 </coverage>

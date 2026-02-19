@@ -107,7 +107,7 @@ The function may be called multiple times during a single render, so it must be 
 
 Uses `useSyncExternalStore` for correct synchronization with React.
 
-#### Extracting fields
+#### Extracting Fields
 
 This is ideal for lightweight, pure selections — e.g. extracting a field.
 
@@ -336,7 +336,7 @@ function Parent () {
 - Maintains computation result across re-renders
 
 ```tsx
-import { State } from 'watch-state'
+import { Observable, State } from 'watch-state'
 import { useObservable, useNewCompute } from '@watch-state/react'
 
 const $name = new State('Mike')
@@ -348,7 +348,7 @@ function Parent () {
   return <Child $fullName={$fullName} />
 }
 
-function Child ({ $fullName }: { $fullName: Compute<string> }) {
+function Child ({ $fullName }: { $fullName: Observable<string> }) {
   const fullName = useObservable($fullName)
 
   return <div>{fullName}</div>
@@ -358,7 +358,7 @@ function Child ({ $fullName }: { $fullName: Compute<string> }) {
 **With dependency array for prop-based recomputation:**
 
 ```tsx
-import { State } from 'watch-state'
+import { Observable, State } from 'watch-state'
 import { useObservable, useNewCompute } from '@watch-state/react'
 
 const $name = new State('Mike')
@@ -369,7 +369,7 @@ function Parent ({ surname }: { surname: string }) {
   return <Child $fullName={$fullName} />
 }
 
-function Child ({ $fullName }: { $fullName: Compute<string> }) {
+function Child ({ $fullName }: { $fullName: Observable<string> }) {
   const fullName = useObservable($fullName)
 
   return <div>{fullName}</div>

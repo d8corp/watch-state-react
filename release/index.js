@@ -2,50 +2,25 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var react = require('react');
-var watchState = require('watch-state');
+require('./_virtual/_rollup-plugin-process-env.js');
+require('./hooks/index.js');
+require('./utils/index.js');
+var useNewCache = require('./hooks/useNewCache/useNewCache.js');
+var useNewCompute = require('./hooks/useNewCompute/useNewCompute.js');
+var useNewState = require('./hooks/useNewState/useNewState.js');
+var useObservable = require('./hooks/useObservable/useObservable.js');
+var useSelector = require('./hooks/useSelector/useSelector.js');
+var useWatch = require('./hooks/useWatch/useWatch.js');
+var useWatcher = require('./hooks/useWatcher/useWatcher.js');
+var subscribe = require('./utils/subscribe/subscribe.js');
 
-function useWatch(state) {
-    return react.useSyncExternalStore(function (callback) {
-        var watcher = new watchState.Watch(function (update) {
-            if (update)
-                callback();
-            return state.value;
-        }, true);
-        return function () {
-            watcher.destroy();
-        };
-    }, function () { return state.value; });
-}
-function useWatcher(state) {
-    return react.useSyncExternalStore(function (callback) {
-        var watcher = new watchState.Watch(function (update) {
-            if (update)
-                callback();
-            return state(update);
-        }, true);
-        return function () {
-            watcher.destroy();
-        };
-    }, function () { return state(false); });
-}
-function useNewState(defaultValue) {
-    var ref = react.useRef();
-    return ref.current || (ref.current = new watchState.State(defaultValue));
-}
-function useNewCache(watcher, deps) {
-    var ref = react.useRef();
-    react.useEffect(function () { return function () {
-        ref.current.destroy();
-    }; }, []);
-    return react.useMemo(function () {
-        var _a;
-        (_a = ref.current) === null || _a === void 0 ? void 0 : _a.destroy();
-        return (ref.current = new watchState.Cache(watcher, true));
-    }, deps);
-}
 
-exports.useNewCache = useNewCache;
-exports.useNewState = useNewState;
-exports.useWatch = useWatch;
-exports.useWatcher = useWatcher;
+
+exports.useNewCache = useNewCache.useNewCache;
+exports.useNewCompute = useNewCompute.useNewCompute;
+exports.useNewState = useNewState.useNewState;
+exports.useObservable = useObservable.useObservable;
+exports.useSelector = useSelector.useSelector;
+exports.useWatch = useWatch.useWatch;
+exports.useWatcher = useWatcher.useWatcher;
+exports.subscribe = subscribe.subscribe;

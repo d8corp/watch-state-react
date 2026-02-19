@@ -8,252 +8,556 @@
 
 [![NPM](https://img.shields.io/npm/v/@watch-state/react.svg)](https://www.npmjs.com/package/@watch-state/react)
 [![downloads](https://img.shields.io/npm/dm/@watch-state/react.svg)](https://www.npmtrends.com/@watch-state/react)
+[![types](https://img.shields.io/npm/types/@watch-state/react)](https://www.typescriptlang.org)
 [![changelog](https://img.shields.io/badge/Changelog-⋮-brightgreen)](https://changelogs.xyz/@watch-state/react)
 [![license](https://img.shields.io/npm/l/@watch-state/react)](https://github.com/d8corp/watch-state-react/blob/master/LICENSE)
-[![tests](https://github.com/d8corp/watch-state-react/workflows/tests/badge.svg)](https://d8corp.github.io/watch-state-react/coverage/lcov-report/)
+[![tests](https://github.com/d8corp/watch-state-react/actions/workflows/tests.yml/badge.svg)](https://d8corp.github.io/watch-state-react/coverage/lcov-report/)
 
-State manager for React 18+ based on [watch-state](https://www.npmjs.com/package/watch-state)
+`@watch-state/react` provides **[React](https://www.npmjs.com/package/react) hooks for [watch-state](https://www.npmjs.com/package/watch-state)** — a lightweight, high-performance reactive state engine.
+
+Written in TypeScript and provides full type definitions out of the box.
 
 [![stars](https://img.shields.io/github/stars/d8corp/watch-state-react?style=social)](https://github.com/d8corp/watch-state-react/stargazers)
 [![watchers](https://img.shields.io/github/watchers/d8corp/watch-state-react?style=social)](https://github.com/d8corp/watch-state-react/watchers)
 
-### Install
+## Index
 
-npm
+<sup>**[ [Install](#install) ]**</sup>  
+<sup>**[ [Hooks](#hooks) ]** [useObservable](#useobservable) • [useSelector](#useselector) • [useNewState](#usenewstate) • [useNewCompute](#usenewcompute)</sup>  
+<sup>**[ [Utils](#utils) ]** [subscribe](#subscribe)</sup>  
+<sup>**[ [Examples](#examples) ]** [Aside Menu](#aside-menu) • [Todo List](#todo-list) • [Async](#async)</sup>  
+<sup>**[ [Links](#links) ]**</sup>  
+<sup>**[ [Issues](#issues) ]**</sup>
 
-```bash
+## Install
+###### [🏠︎](#index) / Install [↓](#hooks)
+
+**Requires [React 18+](https://www.npmjs.com/package/react) and [watch-state 3.5+](https://www.npmjs.com/package/watch-state).**
+
+Use with any modern bundler (Vite, Webpack, Rollup, etc.) or framework (Next.js, Remix, etc.).
+
+```shell
 npm i @watch-state/react
 ```
 
-### Usage
+With [watch-state](https://www.npmjs.com/package/watch-state)
+```shell
+npm i watch-state @watch-state/react
+```
 
-#### useWatch
+## Hooks
+###### [🏠︎](#index) / Hooks [↑](#install) [↓](#utils)
 
-You can observe only function components, by `useWatch` hook.
+<sup>[useObservable](#useobservable) • [useSelector](#useselector) • [useNewState](#usenewstate) • [useNewCompute](#usenewcompute)</sup>
 
-```typescript jsx
+### useObservable
+###### [🏠︎](#index) / [Hooks](#hooks) / useObservable [↓](#useselector)
+
+**Subscribe React components to watch-state changes with automatic re-render optimization.**
+
+Uses `useSyncExternalStore` for correct synchronization with React. Automatically subscribes via `Watch` and unsubscribes on unmount.
+
+#### Watching Observables
+
+Pass a `State` instance (or any `Observable` subclass, such as `Compute`) to `useObservable()` to subscribe to its changes. The hook returns the current value and triggers a re-render whenever the observable value changes.
+
+```tsx
 import { State } from 'watch-state'
-import { useWatch } from '@watch-state/react'
+import { useObservable } from '@watch-state/react'
 
-const show = new State(false)
-const toggleShow = () => show.value = !show.value
+const $count = new State(0)
 
-const AsideMenuButton = () => (
-  <button
-    onClick={toggleShow}
-  />
-)
+const increase = () => {
+  $count.value++
+}
 
-const AsideMenu = () => {
-  const isShow = useWatch(show)
+function Button () {
+  const count = useObservable($count)
 
-  return isShow ? (
-    <div>Aside Menu</div>
-  ) : null
+  return <button onClick={increase}>{count}</button>
 }
 ```
 
-#### useWatcher
+#### Batching Observables
 
-You can observe only function components, by `useWatcher` hook.
+This example demonstrates batching multiple state updates into one reactive event with `createEvent`. Clicking the button increments `$a` and `$b` atomically; the computed `$sum` then updates reactively without intermediate renders since all changes occur in a single update cycle.
 
-```typescript jsx
-import { State } from 'watch-state'
-import { useWatcher } from '@watch-state/react'
+```tsx
+import { State, Compute, createEvent } from 'watch-state'
+import { useObservable } from '@watch-state/react'
 
-const show = new State(false)
-const toggleShow = () => show.value = !show.value
+const $a = new State(1)
+const $b = new State(2)
+const $sum = new Compute(() => $a.value + $b.value)
 
-const AsideMenuButton = () => (
-  <button
-    onClick={toggleShow}
-  />
-)
+const increase = createEvent(() => {
+  $a.value++
+  $b.value++
+})
 
-const AsideMenu = () => {
-  const isShow = useWatcher(() => show.value)
-  // here is the difference ^^^^^^^^^^^^^^^
+function Button () {
+  const sum = useObservable($sum)
 
-  return isShow ? (
-    <div>Aside Menu</div>
-  ) : null
+  return <button onClick={increase}>{sum}</button>
 }
 ```
 
-#### useNewState
+### useSelector
+###### [🏠︎](#index) / [Hooks](#hooks) / useSelector [↑](#useobservable) [↓](#usenewstate)
 
-`useNewState` helps to create a `State` inside react component.
+You can pass a function to `useSelector()` to create a reactive selector that triggers re-renders only when the returned value changes (compared with `Object.is`).
 
-```typescript jsx
-import { Observable } from 'watch-state'
-import { useWatch, useNewState } from '@watch-state/react'
-import { useEffect } from "react";
+The function may be called multiple times during a single render, so it must be pure and simple.
 
-interface ChildProps {
-  value: Observable<string>
+Uses `useSyncExternalStore` for correct synchronization with React.
+
+#### Extracting Fields
+
+This is ideal for lightweight, pure selections — e.g. extracting a field.
+
+```tsx
+import { State } from 'watch-state'
+import { useSelector } from '@watch-state/react'
+
+const $user = new State({ name: 'Mike', age: 42 })
+
+function UserName () {
+  const name = useSelector(() => $user.value.name)
+
+  return <div>Hello, {name}!</div>
 }
+```
 
-const Parent = () => {
-  console.log('Parent creates State once');
+#### Combining Multiple Observables
 
-  const state = useNewState(0)
+You can combine multiple observables in one selector — the result updates reactively when any dependency changes.
 
-  useEffect(() => {
-    const t = setInterval(() => {
-      state.value++
-    }, 1000)
-    
-    return () => {
-      clearInterval(t)
-    }
-  }, [])
+```tsx
+import { State } from 'watch-state'
+import { useSelector } from '@watch-state/react'
+
+const $price = new State(100)
+const $quantity = new State(2)
+
+function Total () {
+  const total = useSelector(() => $price.value * $quantity.value)
+
+  return <div>Total: ${total}</div>
+}
+```
+
+Use `Compute` for complex computations or when returning new objects/arrays to avoid unnecessary recalculations or re-renders.
+
+```tsx
+import { Compute, State } from 'watch-state'
+import { useObservable } from '@watch-state/react'
+
+const $products = new State(['apple', 'banana', 'cherry'])
+
+const $list = new Compute(() => {
+  return $products.value.map(product => product.toUpperCase())
+})
+
+function Total () {
+  const list = useObservable($list)
 
   return (
-    <Test value={state}/>
+    <ul>
+      {list.map((value, index) => (
+        <li key={index}>{value}</li>
+      ))}
+    </ul>
   )
 }
+```
 
-const Test = ({ value }: ChildProps) => {
-  console.log('Test renders once and provides value to Child', value);
+#### Combining with React State or Props
 
-  return (
-    <Child value={value}/>
-  )
-}
+You can combine `useSelector()` with React's `useState` or props to react to both watch-state changes and component state.
 
-const Child = ({ value }: ChildProps) => {
-  console.log('Child renders on value canges', value);
+```tsx
+import { useState } from 'react'
+import { State } from 'watch-state'
+import { useSelector } from '@watch-state/react'
 
-  const currentValue = useWatch(value)
+const $basePrice = new State(100)
+
+function ProductCard ({ isMember }: { isMember: boolean }) {
+  const [quantity, setQuantity] = useState(1)
+
+  const total = useSelector(() => {
+    return $basePrice.value * quantity * (isMember ? 0.9 : 1)
+  })
 
   return (
     <div>
-      {currentValue}
+      <p>Total: ${total}</p>
+      <button onClick={() => setQuantity(q => q + 1)}>+</button>
     </div>
   )
 }
 ```
 
-#### useNewCache
+#### Optimizing Expensive Computations with `useMemo`
 
-`useNewCache` helps to create a `Cache` inside a component.
+For expensive computations or when returning new objects/arrays, use `useMemo` to avoid unnecessary recalculations.
 
-```typescript jsx
+```tsx
 import { State } from 'watch-state'
-import { useWatch, useNewCache } from '@watch-state/react'
+import { useObservable } from '@watch-state/react'
+import { useMemo } from 'react'
 
-const name = new State('Mike')
-const surname = new State('Deight')
+const $items = new State(['apple', 'banana', 'cherry'])
 
-const Parent = () => {
-  const fullName = useNewCache(() => `${name.value} ${surname.value[0]}.`)
-  // renders once
-  return <Child fullName={fullName} />
-}
+function PrefixedItems ({ prefix }: { prefix: string }) {
+  const items = useObservable($items)
 
-interface ChildProps {
-  fullName: Observable<string>
-}
+  const prefixedItems = useMemo(() => {
+    return items.map(item => `${prefix} - ${item}`)
+  }, [items, prefix])
 
-const Child = ({ fullName }: ChildProps) => {
-  const value = useWatch(fullName)
-  // renders when fullName canges
-  return <div>{value}</div>
+  return <div>{prefixedItems.join(', ')}</div>
 }
 ```
 
-`useNewCache` also helps to combine props and `Observable` inside a component.
+### useNewState
+###### [🏠︎](#index) / [Hooks](#hooks) / useNewState [↑](#useselector) [↓](#usenewcompute)
 
-```typescript jsx
-import { State } from 'watch-state'
-import { useWatch, useNewCache } from '@watch-state/react'
+**Create a `State` instance inside a React component that persists across re-renders** and can be watched using `useObservable`.
 
-const name = new State('Mike')
+```tsx
+import { Observable } from 'watch-state'
+import { useObservable, useNewState } from '@watch-state/react'
 
-interface ParentProps {
-  surname: string
-}
+function Parent () {
+  const $count = useNewState(0)
 
-const Parent = ({ surname }: ParentProps) => {
-  const fullName = useNewCache(() => `${name.value} ${surname[0]}.`, [surname])
-  // renders when surname changes
-  return <Child fullName={fullName} />
-}
-
-interface ChildProps {
-  fullName: Observable<string>
-}
-
-const Child = ({ fullName }: ChildProps) => {
-  const value = useWatch(fullName)
-  // renders when fullName canges
-  return <div>{value}</div>
-}
-```
-
-You can use all features [watch-state](https://www.npmjs.com/search?q=%40watch-state) ecosystem.
-
-`Cache` example:
-
-```typescript jsx
-import { State, Cache } from 'watch-state'
-import { useWatch } from '@watch-state/react'
-
-const name = new State('Mike')
-const surname = new State('Deight')
-const fullName = new Cache(() => `${name.value} ${surname.value[0]}.`)
-
-const User = () => {
-  const value = useWatch(fullName)
+  const handleClick = () => {
+    $count.value++
+  }
 
   return (
-    <>{value}</>
+    <div>
+      <button onClick={handleClick}>+</button>
+      <Child $count={$count} />
+    </div>
+  )
+}
+
+function Child ({ $count }: { $count: Observable<number> }) {
+  const count = useObservable($count)
+
+  return <div>{count}</div>
+}
+```
+
+This example demonstrates a key optimization: when the button is clicked and `$count.value` changes, only the `Child` component re-renders (because it's subscribed to the observable), while the `Parent` component remains unchanged. This happens because `useNewState` creates a reactive state that doesn't trigger re-renders in the component where it's defined—only components that explicitly subscribe via `useObservable` or `useSelector` will re-render when the state changes.
+
+#### Using Context for State Sharing
+
+You can also use React Context to share reactive state across deeply nested components without prop drilling:
+
+```tsx
+import { createContext, useContext } from 'react'
+import { Observable } from 'watch-state'
+import { useObservable, useNewState } from '@watch-state/react'
+
+const CountContext = createContext<Observable<number> | undefined>(undefined)
+
+const useCount = () => {
+  const $count = useContext(CountContext)
+
+  if (!$count) throw new Error('CountContext must be provided')
+
+  return useObservable($count)
+}
+
+function Parent () {
+  const $count = useNewState(0)
+
+  const handleClick = () => {
+    $count.value++
+  }
+
+  return (
+    <CountContext.Provider value={$count}>
+      <button onClick={handleClick}>+</button>
+      <Child />
+    </CountContext.Provider>
+  )
+}
+
+function Child () {
+  const count = useCount()
+
+  return <div>{count}</div>
+}
+```
+
+### useNewCompute
+###### [🏠︎](#index) / [Hooks](#hooks) / useNewCompute [↑](#usenewstate)
+
+**Create a `Compute` instance inside a React component (persists across re-renders)** that can be watched using `useObservable`.
+
+```tsx
+import { useObservable, useNewCompute, useNewState } from '@watch-state/react'
+
+function Parent () {
+  const $name = useNewState('Foo')
+  const $surname = useNewState('Bar')
+
+  const $fullName = useNewCompute(() => (
+    `${$name.value} ${$surname.value[0]}.`
+  ))
+
+  const fullName = useObservable($fullName)
+
+  const handleClick = () => {
+    $surname.value = 'Baz'
+  }
+
+  return <button onClick={handleClick}>{fullName}</button>
+}
+```
+
+When the button is clicked, the component will *not* re-render even though `$surname` changed, because the computed value `$fullName` remains the same ("Foo B." before and after the change). This demonstrates the automatic optimization of `useNewCompute` - components only re-render when the computed value actually changes.
+
+#### Using Props for Compute Sharing
+
+You can pass a computed observable as a prop to child components. The `Parent` creates a `Compute` via `useNewCompute` and passes it down; only the `Child` re-renders when the computed value changes, while the `Parent` stays untouched.
+
+```tsx
+import { Observable, State } from 'watch-state'
+import { useObservable, useNewCompute } from '@watch-state/react'
+
+const $name = new State('Mike')
+const $surname = new State('Deight')
+
+function Parent () {
+  const $fullName = useNewCompute(() => `${$name.value} ${$surname.value[0]}.`)
+
+  return <Child $fullName={$fullName} />
+}
+
+function Child ({ $fullName }: { $fullName: Observable<string> }) {
+  const fullName = useObservable($fullName)
+
+  return <div>{fullName}</div>
+}
+```
+
+#### Using dependency array for component state
+
+Pass a dependency array as the second argument to `useNewCompute` to incorporate non-reactive values (props, React state) into the compute function. When any dependency in the array changes, the existing `Compute` instance triggers an update — recalculating its value without being recreated.
+
+```tsx
+import { Observable, State } from 'watch-state'
+import { useObservable, useNewCompute } from '@watch-state/react'
+
+const $name = new State('Mike')
+
+function Parent ({ surname }: { surname: string }) {
+  const $fullName = useNewCompute(() => (
+    `${$name.value} ${surname[0]}.`
+  ), [surname])
+
+  return <Child $fullName={$fullName} />
+}
+
+function Child ({ $fullName }: { $fullName: Observable<string> }) {
+  const fullName = useObservable($fullName)
+
+  return <div>{fullName}</div>
+}
+```
+
+#### Using Context for Compute Sharing
+
+You can use React Context to share a computed observable across deeply nested components without prop drilling:
+
+```tsx
+import { createContext, useContext } from 'react'
+import { Observable, State } from 'watch-state'
+import { useObservable, useNewCompute } from '@watch-state/react'
+
+const $name = new State('Mike')
+const $surname = new State('Deight')
+
+const FullNameContext = createContext<Observable<string> | undefined>(undefined)
+
+const useFullName = () => {
+  const $fullName = useContext(FullNameContext)
+
+  if (!$fullName) throw new Error('FullNameContext must be provided')
+
+  return useObservable($fullName)
+}
+
+function Parent () {
+  const $fullName = useNewCompute(() => `${$name.value} ${$surname.value[0]}.`)
+
+  return (
+    <FullNameContext.Provider value={$fullName}>
+      <Child />
+    </FullNameContext.Provider>
+  )
+}
+
+function Child () {
+  const fullName = useFullName()
+
+  return <div>{fullName}</div>
+}
+```
+
+## Utils
+###### [🏠︎](#index) / Utils [↑](#hooks) [↓](#examples)
+
+<sup>[subscribe](#subscribe)</sup>
+
+### subscribe
+###### [🏠︎](#index) / [Utils](#utils) / subscribe
+
+**Stable subscription factory for `useSyncExternalStore` with watch-state.**
+
+Used internally by [useObservable](#useobservable) and [useSelector](#useselector).
+Creates a `Watch` instance that calls the provided callback on state changes.
+
+```ts
+import { useSyncExternalStore } from 'react'
+import { subscribe } from '@watch-state/react'
+import { State } from 'watch-state'
+
+const $state = new State(0)
+
+const value = useSyncExternalStore(subscribe, () => $state.value)
+// Same as useObservable($state)
+```
+
+## Examples
+###### [🏠︎](#index) / Examples [↑](#utils) [↓](#links)
+
+<sup>[Aside Menu](#aside-menu) • [Todo List](#todo-list) • [Async](#async)</sup>
+
+### Aside Menu
+###### [🏠︎](#index) / [Examples](#examples) / Aside Menu [↓](#todo-list)
+
+Two independent components sharing a single global `State`. The button toggles `$show`, while `AsideMenu` subscribes via `useObservable` and re-renders accordingly — the button itself never re-renders.
+
+```tsx
+import { State } from 'watch-state'
+import { useObservable } from '@watch-state/react'
+
+const $show = new State(false)
+
+function AsideMenuButton () {
+  const toggle = () => {
+    $show.value = !$show.value
+  }
+
+  return <button onClick={toggle} />
+}
+
+function AsideMenu () {
+  const show = useObservable($show)
+
+  return show ? <div>Aside Menu</div> : null
+}
+```
+
+### Todo List
+###### [🏠︎](#index) / [Examples](#examples) / Todo List [↑](#aside-menu) [↓](#async)
+
+A classic todo app showing how to combine a global reactive `State` with React's local `useState`. The todo list is shared via `useObservable`, while the input field stays in component-local state.
+
+```tsx
+import { useState } from 'react'
+import { State } from 'watch-state'
+import { useObservable } from '@watch-state/react'
+
+interface Todo {
+  id: number
+  text: string
+  done: boolean
+}
+
+const $todos = new State<Todo[]>([])
+let nextId = 1
+
+const addTodo = (text: string) => {
+  $todos.value.push({ id: nextId++, text, done: false })
+  $todos.update()
+}
+
+const toggleTodo = (todoId: number) => {
+  $todos.value = $todos.value.map(todo =>
+    todoId === todo.id ? { ...todo, done: !todo.done } : todo
+  )
+}
+
+function TodoList () {
+  const todos = useObservable($todos)
+  const [text, setText] = useState('')
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (text.trim()) {
+      addTodo(text.trim())
+      setText('')
+    }
+  }
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input
+          value={text}
+          onChange={e => setText(e.target.value)}
+          placeholder="What needs to be done?"
+        />
+        <button type="submit">Add</button>
+      </form>
+      <ul>
+        {todos.map(({ id, done, text }) => (
+          <li
+            key={id}
+            onClick={() => toggleTodo(id)}
+            style={{ textDecoration: done ? 'line-through' : 'none' }}
+          >
+            {text}
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
 ```
 
-[@watch-state/history-api](https://www.npmjs.com/package/@watch-state/history-api) example:
+### Async
+###### [🏠︎](#index) / [Examples](#examples) / Async [↑](#todo-list)
 
-```typescript jsx
-import { useWatch } from '@watch-state/react'
-import { locationPath, historyPush } from '@watch-state/history-api'
+This example demonstrates integration with [`@watch-state/async`](https://www.npmjs.com/package/@watch-state/async) for reactive data fetching. `Async` is an observable that wraps a Promise-returning function. Use `useObservable` to subscribe to the resolved value and `useSelector` to reactively track its `loading`, `loaded`, and `error` properties.
 
-const goTest = () => {
-  historyPush('/test')
-}
-
-const User = () => {
-  const path = useWatch(locationPath)
-
-  return (
-    <button onClick={goTest}>
-      {path}
-    </button>
-  )
-}
-```
-
-[@watch-state/async](https://www.npmjs.com/package/@watch-state/async) example:
-
-```typescript jsx
-import { useWatch, useWatcher } from '@watch-state/react'
+```tsx
+import { useObservable, useSelector } from '@watch-state/react'
 import Async from '@watch-state/async'
 
-const api = new Async(
+const $api = new Async(
   () => fetch('/api/test')
     .then(r => r.json())
 )
 
-const User = () => {
-  const value = useWatch(api)
-  const loading = useWatcher(() => api.loading)
-  const loaded = useWatcher(() => api.loaded)
-  const error = useWatcher(() => api.error)
-  
+function User () {
+  const value = useObservable($api)
+  const loading = useSelector(() => $api.loading)
+  const loaded = useSelector(() => $api.loaded)
+  const error = useSelector(() => $api.error)
+
   if (error) {
     return <div>Error!</div>
   }
-  
+
   if (!loaded) {
     return <div>Loading</div>
   }
@@ -266,11 +570,16 @@ const User = () => {
 }
 ```
 
-### Links
+## Links
+###### [🏠︎](#index) / Links [↑](#examples) [↓](#issues)
+
 - [React](https://reactjs.org)
 - [watch-state](https://www.npmjs.com/package/watch-state)
+- [@watch-state ecosystem](https://www.npmjs.com/search?q=%40watch-state)
 
 ## Issues
+###### [🏠︎](#index) / Issues [↑](#links)
+
 If you find a bug or have a suggestion, please file an issue on [GitHub](https://github.com/d8corp/watch-state-react/issues)
 
 [![issues](https://img.shields.io/github/issues-raw/d8corp/watch-state-react)](https://github.com/d8corp/watch-state-react/issues)

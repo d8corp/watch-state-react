@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.0
+
+### v2.0.0 [![20.02.2026](https://img.shields.io/date/1771540976)](https://github.com/d8corp/watch-state-react/tree/v2.0.0)
+
+- deprecate `useWatch` hook (use `useObservable`)
+- deprecate `useNewCache` hook (use `useNewCompute`)
+- deprecate `useWatcher` hook (use `useSelector`)
+- improve performance and fixed bugs
+
 ## v1.4
 ### v1.4.0 [![08.02.2022](https://img.shields.io/date/1644340816)](https://github.com/d8corp/watch-state-react/tree/v1.4.0)
 - added `useWatch` hook

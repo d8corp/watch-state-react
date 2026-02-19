@@ -1,6 +1,6 @@
 {
   "name": "@watch-state/react",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0",
   "description": "State manager of React",
   "main": "index.js",
   "module": "index.es6.js",
@@ -15,8 +15,8 @@
     "patch": "innetjs patch",
     "minor": "innetjs minor",
     "major": "innetjs major",
-    "lint": "eslint src --ext .ts,.tsx",
-    "lint:fix": "eslint src --ext .ts,.tsx --fix"
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
   },
   "repository": {
     "type": "git",
@@ -42,6 +42,6 @@
   "homepage": "https://github.com/d8corp/watch-state-react",
   "dependencies": {
     "react": ">=18",
-    "watch-state": "^3.5.0-alpha.2"
+    "watch-state": "^3.5.0"
   }
 }

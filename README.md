@@ -293,8 +293,6 @@ function Child () {
 }
 ```
 
-This pattern is useful when you need to share reactive state across deeply nested components without passing props through intermediate components.
-
 ### useNewCompute
 ###### [🏠︎](#index) / [Hooks](#hooks) / useNewCompute [↑](#usenewstate)
 

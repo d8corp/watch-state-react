@@ -12,7 +12,7 @@
 [![license](https://img.shields.io/npm/l/@watch-state/react)](https://github.com/d8corp/watch-state-react/blob/master/LICENSE)
 [![tests](https://github.com/d8corp/watch-state-react/actions/workflows/tests.yml/badge.svg)](https://d8corp.github.io/watch-state-react/coverage/lcov-report/)
 
-`@watch-state/react` provides **React hooks for watch-state** — a lightweight, high-performance reactive state engine.
+`@watch-state/react` provides **[React](https://www.npmjs.com/package/react) hooks for [watch-state](https://www.npmjs.com/package/watch-state)** — a lightweight, high-performance reactive state engine.
 
 [![stars](https://img.shields.io/github/stars/d8corp/watch-state-react?style=social)](https://github.com/d8corp/watch-state-react/stargazers)
 [![watchers](https://img.shields.io/github/watchers/d8corp/watch-state-react?style=social)](https://github.com/d8corp/watch-state-react/watchers)

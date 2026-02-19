@@ -194,11 +194,11 @@ const ProductCard = ({ isMember }) => {
 }
 ```
 
-This pattern is useful when you need to track both global state (via `useObservable`) and local component state (via `useState` or props).
+This pattern is useful when you need to track both global state and local component state.
 
 #### Optimizing Expensive Computations with `useMemo`
 
-For expensive computations (like array operations) or when returning new objects/arrays, use `useMemo` to avoid unnecessary recalculations.
+For expensive computations or when returning new objects/arrays, use `useMemo` to avoid unnecessary recalculations.
 
 ```tsx
 import { State } from 'watch-state'
@@ -224,25 +224,75 @@ const PrefixedItems = ({ prefix }) => {
 **Create a `State` instance inside a React component (persists across re-renders)** that can be watched using `useObservable`.
 
 ```tsx
+import { Observable } from 'watch-state'
 import { useObservable, useNewState } from '@watch-state/react'
-import { useEffect } from 'react'
 
-const Counter = () => {
+function Parent () {
   const $count = useNewState(0)
 
-  useEffect(() => {
-    const t = setInterval(() => {
-      $count.value++
-    }, 1000)
+  const handleClick = () => {
+    $count.value++
+  }
 
-    return () => clearInterval(t)
-  }, [])
+  return (
+    <div>
+      <button onClick={handleClick}>+</button>
+      <Child $count={$count} />
+    </div>
+  )
+}
 
-  const value = useObservable($count)
+function Child ({ $count }: { $count: Observable<number>}) {
+  const count = useObservable($count)
 
-  return <div>{value}</div>
+  return <div>{count}</div>
 }
 ```
+
+This example demonstrates a key optimization: when the button is clicked and `$count.value` changes, only the `Child` component re-renders (because it's subscribed to the observable), while the `Parent` component remains unchanged. This happens because `useNewState` creates a reactive state that doesn't trigger re-renders in the component where it's defined—only components that explicitly subscribe via `useObservable` or `useSelector` will re-render when the state changes.
+
+#### Using Context for State Sharing
+
+You can also use React Context to share reactive state across deeply nested components without prop drilling:
+
+```tsx
+import { createContext, useContext } from 'react'
+import { Observable } from 'watch-state'
+import { useObservable, useNewState } from '@watch-state/react'
+
+const CountContext = createContext<Observable<number> | undefined>(undefined)
+
+const useCount = () => {
+  const $count = useContext(CountContext)
+
+  if (!$count) throw new Error('CountContext must be provided')
+
+  return useObservable($count)
+}
+
+function Parent () {
+  const $count = useNewState(0)
+
+  const handleClick = () => {
+    $count.value++
+  }
+
+  return (
+    <CountContext.Provider value={$count}>
+      <button onClick={handleClick}>+</button>
+      <Child />
+    </CountContext.Provider>
+  )
+}
+
+function Child () {
+  const count = useCount()
+
+  return <div>{count}</div>
+}
+```
+
+This pattern is useful when you need to share state across multiple levels of component nesting without passing props through intermediate components.
 
 ### useNewCompute
 ###### [🏠︎](#index) / [Hooks](#hooks) / useNewCompute [↑](#usenewstate)

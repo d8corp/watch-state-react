@@ -74,6 +74,7 @@ const Button = () => {
   return <button onClick={increase}>{count}</button>
 }
 ```
+#### Batching Observables
 
 The next example demonstrates batching multiple state updates into one reactive event with `createEvent`. Clicking the button increments `$a` and `$b` atomically; the computed `$sum` then updates reactively without intermediate renders since all changes occur in a single update cycle.
 

@@ -56,7 +56,7 @@ Uses `useSyncExternalStore` for correct synchronization with React. Automaticall
 
 #### Watching Observables
 
-Pass a `State` instance (or any `Observable` subclass, such as `Compute`) to `useObservable()` to subscribe to its changes. The hook returns the current value and triggers a re-render whenever the observable value is changed.
+Pass a `State` instance (or any `Observable` subclass, such as `Compute`) to `useObservable()` to subscribe to its changes. The hook returns the current value and triggers a re-render whenever the observable value changes.
 
 ```tsx
 import { State } from 'watch-state'
@@ -76,7 +76,7 @@ function Button () {
 ```
 #### Batching Observables
 
-The next example demonstrates batching multiple state updates into one reactive event with `createEvent`. Clicking the button increments `$a` and `$b` atomically; the computed `$sum` then updates reactively without intermediate renders since all changes occur in a single update cycle.
+This example demonstrates batching multiple state updates into one reactive event with `createEvent`. Clicking the button increments `$a` and `$b` atomically; the computed `$sum` then updates reactively without intermediate renders since all changes occur in a single update cycle.
 
 ```tsx
 import { State, Compute, createEvent } from 'watch-state'
@@ -292,7 +292,7 @@ function Child () {
 }
 ```
 
-This pattern is useful when you need to share state across multiple levels of component nesting without passing props through intermediate components.
+This pattern is useful when you need to share reactive state across deeply nested components without passing props through intermediate components.
 
 ### useNewCompute
 ###### [🏠︎](#index) / [Hooks](#hooks) / useNewCompute [↑](#usenewstate)
@@ -327,7 +327,7 @@ function Parent () {
 - `deps` (optional) — A dependency array that triggers recomputation when values change. Use this for props or external values that should trigger an update.
 
 **Returns:**
-- A `Compute` instance containing the computed value.
+- A `Compute` instance with the computed value.
 
 **Behavior:**
 - Automatically tracks reactive dependencies (State/Compute instances) accessed within the watcher function

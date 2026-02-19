@@ -101,7 +101,7 @@ function Button () {
 ### useSelector
 ###### [🏠︎](#index) / [Hooks](#hooks) / useSelector [↑](#useobservable) [↓](#usenewstate)
 
-You can pass a function to `useSelector()` to create a reactive selector that triggers re-renders only when the returned value changes. (compared with `Object.is`).
+You can pass a function to `useSelector()` to create a reactive selector that triggers re-renders only when the returned value changes (compared with `Object.is`).
 
 The function may be called multiple times during a single render, so it must be pure and simple.
 
@@ -221,7 +221,7 @@ function PrefixedItems ({ prefix }) {
 ### useNewState
 ###### [🏠︎](#index) / [Hooks](#hooks) / useNewState [↑](#useobservable) [↓](#usenewcompute)
 
-**Create a `State` instance inside a React component (persists across re-renders)** that can be watched using `useObservable`.
+**Create a `State` instance inside a React component that persists across re-renders** and can be watched using `useObservable`.
 
 ```tsx
 import { Observable } from 'watch-state'
@@ -242,7 +242,7 @@ function Parent () {
   )
 }
 
-function Child ({ $count }: { $count: Observable<number>}) {
+function Child ({ $count }: { $count: Observable<number> }) {
   const count = useObservable($count)
 
   return <div>{count}</div>
@@ -343,15 +343,15 @@ const $name = new State('Mike')
 const $surname = new State('Deight')
 
 function Parent () {
-  const fullName = useNewCompute(() => `${$name.value} ${$surname.value[0]}.`)
+  const $fullName = useNewCompute(() => `${$name.value} ${$surname.value[0]}.`)
 
-  return <Child fullName={fullName} />
+  return <Child $fullName={$fullName} />
 }
 
-function Child ({ fullName }) {
-  const value = useObservable(fullName)
+function Child ({ $fullName }: { $fullName: Compute<string> }) {
+  const fullName = useObservable($fullName)
 
-  return <div>{value}</div>
+  return <div>{fullName}</div>
 }
 ```
 
@@ -363,16 +363,16 @@ import { useObservable, useNewCompute } from '@watch-state/react'
 
 const $name = new State('Mike')
 
-function Parent ({ surname }) {
-  const fullName = useNewCompute(() => `${$name.value} ${surname[0]}.`, [surname])
+function Parent ({ surname }: { surname: string }) {
+  const $fullName = useNewCompute(() => `${$name.value} ${surname[0]}.`, [surname])
 
-  return <Child fullName={fullName} />
+  return <Child $fullName={$fullName} />
 }
 
-function Child ({ fullName }) {
-  const value = useObservable(fullName)
+function Child ({ $fullName }: { $fullName: Compute<string> }) {
+  const fullName = useObservable($fullName)
 
-  return <div>{value}</div>
+  return <div>{fullName}</div>
 }
 ```
 

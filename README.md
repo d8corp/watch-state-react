@@ -402,30 +402,10 @@ const value = useSyncExternalStore(subscribe, () => $state.value)
 ## Examples
 ###### [🏠︎](#index) / Examples [↑](#utils) [↓](#links)
 
-<sup>[Counter](#counter) • [Toggle](#toggle) • [Async](#async)</sup>
-
-### Counter
-###### [🏠︎](#index) / [Examples](#examples) / Counter [↓](#toggle)
-
-```tsx
-import { State } from 'watch-state'
-import { useObservable } from '@watch-state/react'
-
-const $count = new State(0)
-
-const increase = () => {
-  $count.value++
-}
-
-export function CountButton () {
-  const count = useObservable($count)
-
-  return <button onClick={increase}>{count}</button>
-}
-```
+<sup>[Toggle](#toggle) • [Todo List](#todo-list) • [Async](#async)</sup>
 
 ### Toggle
-###### [🏠︎](#index) / [Examples](#examples) / Toggle [↑](#counter) [↓](#async)
+###### [🏠︎](#index) / [Examples](#examples) / Toggle [↓](#todo-list)
 
 ```tsx
 import { State } from 'watch-state'
@@ -445,6 +425,73 @@ function AsideMenu () {
   const show = useObservable($show)
 
   return show ? <div>Aside Menu</div> : null
+}
+```
+
+### Todo List
+###### [🏠︎](#index) / [Examples](#examples) / Todo List [↑](#toggle)
+
+```tsx
+import { useState } from 'react'
+import { State } from 'watch-state'
+import { useObservable, useNewState } from '@watch-state/react'
+
+interface Todo {
+  id: number
+  text: string
+  done: boolean
+}
+
+const $todos = new State<Todo[]>([])
+let nextId = 1
+
+const addTodo = (text: string) => {
+  $todos.value.push({ id: nextId++, text, done: false })
+  $todos.update()
+}
+
+const toggleTodo = (todoId: number) => {
+  $todos.value = $todos.value.map(({ id, done }) =>
+    todoId === id ? { ...todo, done: !done } : todo
+  )
+}
+
+function TodoList () {
+  const todos = useObservable($todos)
+  const [text, setText] = useState('')
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (text.trim()) {
+      addTodo(text.trim())
+      setText('')
+    }
+  }
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input
+          value={text}
+          onChange={e => setText(e.target.value)}
+          placeholder="What needs to be done?"
+        />
+        <button type="submit">Add</button>
+      </form>
+      <ul>
+        {todos.map(({ id, done, text }) => (
+          <li
+            key={id}
+            onClick={() => toggleTodo(id)}
+            style={{ textDecoration: done ? 'line-through' : 'none' }}
+          >
+            {text}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
 }
 ```
 

@@ -34,8 +34,10 @@ import { State } from 'watch-state'
  * }
  * ```
  */
-export function useNewState<S> (defaultValue?: S): State<S> {
-  const ref = useRef<State<S>>()
+export function useNewState<T = never> (...args: T extends never | undefined ? [T?] : [T]): State<T>
 
-  return ref.current || (ref.current = new State(defaultValue))
+export function useNewState<T = never> (defaultValue?: any): State<T> {
+  const ref = useRef<State<T>>()
+
+  return ref.current || (ref.current = new State<typeof defaultValue>(defaultValue))
 }

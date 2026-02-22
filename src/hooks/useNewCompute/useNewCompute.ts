@@ -1,5 +1,5 @@
 import { type DependencyList, useEffect, useRef } from 'react'
-import type { Watcher } from 'watch-state'
+import type { Reaction } from 'watch-state'
 import { Compute } from 'watch-state'
 
 /**
@@ -61,7 +61,7 @@ import { Compute } from 'watch-state'
  * }
  * ```
  */
-export function useNewCompute <T> (watcher: Watcher<T>, deps?: DependencyList) {
+export function useNewCompute <T> (watcher: Reaction<T>, deps?: DependencyList) {
   const result = useRef<Compute<T>>()
   const watcherRef = useRef(watcher)
   const updateRef = useRef(false)
@@ -80,5 +80,5 @@ export function useNewCompute <T> (watcher: Watcher<T>, deps?: DependencyList) {
     return () => result.current.destroy()
   }, [])
 
-  return result.current || (result.current = new Compute(update => watcherRef.current(update), true))
+  return result.current || (result.current = new Compute(() => watcherRef.current(), true))
 }

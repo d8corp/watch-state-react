@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react'
+import type { Reaction } from 'watch-state'
 
 import { subscribe } from '../../utils'
 
@@ -6,7 +7,7 @@ import { subscribe } from '../../utils'
  * A function that selects or derives a value from the current state.
  * @template T The type of the selected value
  */
-export type Selector<T> = () => T
+export type Selector<T> = Reaction<T>
 
 /**
  * React hook to select a portion of state or derive data from the current state.

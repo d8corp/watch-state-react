@@ -74,7 +74,7 @@ function useNewCompute(watcher, deps) {
         updateRef.current = true;
         return function () { return result.current.destroy(); };
     }, []);
-    return result.current || (result.current = new Compute(function (update) { return watcherRef.current(update); }, true));
+    return result.current || (result.current = new Compute(function () { return watcherRef.current(); }, true));
 }
 
 export { useNewCompute };

@@ -8,6 +8,7 @@
 
 [![NPM](https://img.shields.io/npm/v/@watch-state/react.svg)](https://www.npmjs.com/package/@watch-state/react)
 [![downloads](https://img.shields.io/npm/dm/@watch-state/react.svg)](https://www.npmtrends.com/@watch-state/react)
+[![downloads](https://packagephobia.com/badge?p=@watch-state/react)](https://github.com/d8corp/watch-state-react/tree/main/release)
 [![types](https://img.shields.io/npm/types/@watch-state/react)](https://www.typescriptlang.org)
 [![changelog](https://img.shields.io/badge/Changelog-⋮-brightgreen)](https://changelogs.xyz/@watch-state/react)
 [![license](https://img.shields.io/npm/l/@watch-state/react)](https://github.com/d8corp/watch-state-react/blob/master/LICENSE)

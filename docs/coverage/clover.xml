@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1771540181552" clover="3.2.0">
-  <project timestamp="1771540181552" name="All files">
+<coverage generated="1771800505512" clover="3.2.0">
+  <project timestamp="1771800505512" name="All files">
     <metrics statements="64" coveredstatements="55" conditionals="12" coveredconditionals="8" methods="18" coveredmethods="11" elements="94" coveredelements="74" complexity="0" loc="64" ncloc="64" packages="11" files="19" classes="19"/>
     <package name="src">
       <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
@@ -70,9 +70,9 @@
         <metrics statements="5" coveredstatements="5" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
-        <line num="37" count="3" type="stmt"/>
-        <line num="38" count="4" type="stmt"/>
-        <line num="40" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="39" count="3" type="stmt"/>
+        <line num="40" count="4" type="stmt"/>
+        <line num="42" count="4" type="cond" truecount="2" falsecount="0"/>
       </file>
     </package>
     <package name="src.hooks.useObservable">
@@ -97,9 +97,9 @@
       <file name="useSelector.ts" path="/Users/deight/cantinc/watch-state-react/src/hooks/useSelector/useSelector.ts">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="1" count="5" type="stmt"/>
-        <line num="3" count="5" type="stmt"/>
-        <line num="41" count="5" type="stmt"/>
-        <line num="42" count="44" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="42" count="5" type="stmt"/>
+        <line num="43" count="44" type="stmt"/>
       </file>
     </package>
     <package name="src.hooks.useWatch">

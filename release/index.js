@@ -2,7 +2,6 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-require('./_virtual/_rollup-plugin-process-env.js');
 require('./hooks/index.js');
 require('./utils/index.js');
 var useNewCache = require('./hooks/useNewCache/useNewCache.js');

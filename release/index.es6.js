@@ -1,4 +1,3 @@
-import './_virtual/_rollup-plugin-process-env.es6.js';
 import './hooks/index.es6.js';
 import './utils/index.es6.js';
 export { useNewCache } from './hooks/useNewCache/useNewCache.es6.js';

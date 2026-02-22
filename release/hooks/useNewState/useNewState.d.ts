@@ -32,4 +32,4 @@ import { State } from 'watch-state';
  * }
  * ```
  */
-export declare function useNewState<S>(defaultValue?: S): State<S>;
+export declare function useNewState<T = never>(...args: T extends never | undefined ? [T?] : [T]): State<T>;

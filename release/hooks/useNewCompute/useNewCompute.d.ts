@@ -1,5 +1,5 @@
 import { type DependencyList } from 'react';
-import type { Watcher } from 'watch-state';
+import type { Reaction } from 'watch-state';
 import { Compute } from 'watch-state';
 /**
  * Creates a `Compute` instance that can be passed as a static prop to child components.
@@ -60,4 +60,4 @@ import { Compute } from 'watch-state';
  * }
  * ```
  */
-export declare function useNewCompute<T>(watcher: Watcher<T>, deps?: DependencyList): Compute<T>;
+export declare function useNewCompute<T>(watcher: Reaction<T>, deps?: DependencyList): Compute<T>;

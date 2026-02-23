@@ -5,7 +5,7 @@ import { State } from 'watch-state';
  * This pattern optimizes re-renders: parent components don't re-render when state changes.
  *
  * @template S - The type of the state value
- * @param defaultValue - Optional initial value for the state
+ * @param initial - Optional initial value for the state
  * @returns A `State` instance
  *
  * @example
@@ -32,4 +32,4 @@ import { State } from 'watch-state';
  * }
  * ```
  */
-export declare function useNewState<T = never>(...args: T extends never | undefined ? [T?] : [T]): State<T>;
+export declare function useNewState<T = unknown>(...args: undefined extends T ? [T?] : [T]): State<T>;

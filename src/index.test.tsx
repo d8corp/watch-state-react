@@ -34,13 +34,13 @@ describe('Examples', () => {
     expect(container.innerHTML).toBe('<button></button>')
 
     act(() => {
-      container.querySelector('button').click()
+      container.querySelector('button')!.click()
     })
 
     expect(container.innerHTML).toBe('<button></button><div>Aside Menu</div>')
 
     act(() => {
-      container.querySelector('button').click()
+      container.querySelector('button')!.click()
     })
 
     expect(container.innerHTML).toBe('<button></button>')
@@ -111,23 +111,23 @@ describe('Examples', () => {
 
     const input = container.querySelector('input')
 
-    fireEvent.change(input, { target: { value: 'Buy milk' } })
-    fireEvent.submit(container.querySelector('form'))
+    fireEvent.change(input!, { target: { value: 'Buy milk' } })
+    fireEvent.submit(container.querySelector('form')!)
 
     expect(container.querySelectorAll('li').length).toBe(1)
-    expect(container.querySelector('li').textContent).toBe('Buy milk')
-    expect(container.querySelector('li').style.textDecoration).toBe('none')
+    expect(container.querySelector('li')?.textContent).toBe('Buy milk')
+    expect(container.querySelector('li')?.style.textDecoration).toBe('none')
 
     act(() => {
-      container.querySelector('li').click()
+      container.querySelector('li')?.click()
     })
 
-    expect(container.querySelector('li').style.textDecoration).toBe('line-through')
+    expect(container.querySelector('li')?.style.textDecoration).toBe('line-through')
 
     act(() => {
-      container.querySelector('li').click()
+      container.querySelector('li')?.click()
     })
 
-    expect(container.querySelector('li').style.textDecoration).toBe('none')
+    expect(container.querySelector('li')?.style.textDecoration).toBe('none')
   })
 })

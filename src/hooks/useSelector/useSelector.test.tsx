@@ -34,7 +34,7 @@ describe('useSelector', () => {
 
     isRendered = false
 
-    fireEvent.click(screen.queryByText('Foo B.'))
+    fireEvent.click(screen.queryByText('Foo B.')!)
 
     expect(surname.value).toBe('Baz')
     expect(screen.queryByText('Foo B.')).toBeInTheDocument()
@@ -75,13 +75,13 @@ describe('useSelector', () => {
     expect(surname.value).toBe('Bar')
 
     isRendered = false
-    fireEvent.click(screen.queryByText('Change Name'))
+    fireEvent.click(screen.queryByText('Change Name')!)
 
     expect(isRendered).toBe(true)
     expect(screen.queryByText('FullName: Mike B.')).toBeInTheDocument()
 
     isRendered = false
-    fireEvent.click(screen.queryByText('Change Surname'))
+    fireEvent.click(screen.queryByText('Change Surname')!)
 
     expect(isRendered).toBe(false)
     expect(surname.value).toBe('Baz')

@@ -24,11 +24,11 @@ describe('useObservable', () => {
 
     expect(screen.queryByText('0')).toBeInTheDocument()
 
-    fireEvent.click(screen.queryByText('0'))
+    fireEvent.click(screen.queryByText('0')!)
 
     expect(screen.queryByText('1')).toBeInTheDocument()
 
-    fireEvent.click(screen.queryByText('1'))
+    fireEvent.click(screen.queryByText('1')!)
 
     expect(screen.queryByText('2')).toBeInTheDocument()
   })
@@ -59,7 +59,7 @@ describe('useObservable', () => {
 
     isRendered = false
 
-    fireEvent.click(screen.queryByText('Foo B.'))
+    fireEvent.click(screen.queryByText('Foo B.')!)
 
     expect(surname.value).toBe('Baz')
     expect(screen.queryByText('Foo B.')).toBeInTheDocument()
@@ -91,12 +91,12 @@ describe('useObservable', () => {
     expect(screen.queryByText('3')).toBeInTheDocument()
     expect(renderCount).toBe(1)
 
-    fireEvent.click(screen.queryByText('3'))
+    fireEvent.click(screen.queryByText('3')!)
 
     expect(screen.queryByText('5')).toBeInTheDocument()
     expect(renderCount).toBe(2)
 
-    fireEvent.click(screen.queryByText('5'))
+    fireEvent.click(screen.queryByText('5')!)
 
     expect(screen.queryByText('7')).toBeInTheDocument()
     expect(renderCount).toBe(3)

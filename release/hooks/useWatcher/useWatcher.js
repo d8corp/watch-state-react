@@ -8,6 +8,7 @@ var watchState = require('watch-state');
 /** @deprecated Use `useSelector` */
 function useWatcher(state) {
     return react.useSyncExternalStore(function (callback) {
+        // @ts-expect-error Deprecated
         var watcher = new watchState.Watch(function (update) {
             if (update)
                 callback();

@@ -43,7 +43,9 @@ describe('useNewState', () => {
     expect(container.innerHTML).toBe('Hello!<input>')
     expect(renderCount).toBe(1)
 
-    fireEvent.input(inputRef.current, { target: { value: 'Buy!' } })
+    if (inputRef.current) {
+      fireEvent.input(inputRef.current, { target: { value: 'Buy!' } })
+    }
 
     expect(container.innerHTML).toBe('Buy!<input>')
     expect(renderCount).toBe(1)
@@ -91,14 +93,14 @@ describe('useNewState', () => {
     expect(parentRenderCount).toBe(1)
 
     act(() => {
-      container.querySelector('button').click()
+      container.querySelector('button')?.click()
     })
 
     expect(container.innerHTML).toBe('<button>+</button><div>1</div>')
     expect(parentRenderCount).toBe(1)
 
     act(() => {
-      container.querySelector('button').click()
+      container.querySelector('button')?.click()
     })
 
     expect(container.innerHTML).toBe('<button>+</button><div>2</div>')

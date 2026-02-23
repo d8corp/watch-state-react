@@ -4,6 +4,7 @@ import { Watch } from 'watch-state';
 /** @deprecated Use `useSelector` */
 function useWatcher(state) {
     return useSyncExternalStore(function (callback) {
+        // @ts-expect-error Deprecated
         var watcher = new Watch(function (update) {
             if (update)
                 callback();

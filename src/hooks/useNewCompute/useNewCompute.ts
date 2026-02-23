@@ -70,14 +70,14 @@ export function useNewCompute <T> (watcher: Reaction<T>, deps?: DependencyList) 
 
   useEffect(() => {
     if (deps && updateRef.current) {
-      result.current.update()
+      result.current?.update()
     }
   }, deps)
 
   useEffect(() => {
     updateRef.current = true
 
-    return () => result.current.destroy()
+    return () => result.current?.destroy()
   }, [])
 
   return result.current || (result.current = new Compute(() => watcherRef.current(), true))

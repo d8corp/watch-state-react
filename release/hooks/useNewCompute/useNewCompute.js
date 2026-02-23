@@ -70,13 +70,14 @@ function useNewCompute(watcher, deps) {
     var updateRef = react.useRef(false);
     watcherRef.current = watcher;
     react.useEffect(function () {
+        var _a;
         if (deps && updateRef.current) {
-            result.current.update();
+            (_a = result.current) === null || _a === void 0 ? void 0 : _a.update();
         }
     }, deps);
     react.useEffect(function () {
         updateRef.current = true;
-        return function () { return result.current.destroy(); };
+        return function () { var _a; return (_a = result.current) === null || _a === void 0 ? void 0 : _a.destroy(); };
     }, []);
     return result.current || (result.current = new watchState.Compute(function () { return watcherRef.current(); }, true));
 }
